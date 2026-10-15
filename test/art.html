@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><title>art sheet</title>
+<!-- Every doodle texture side by side, for eyeballing the placeholder art. -->
+<style>body{margin:0;padding:12px;background:#f7f3e8;display:flex;flex-wrap:wrap;gap:8px;font:16px Gaegu,sans-serif}figure{margin:0;text-align:center}img{height:220px}</style>
+<link rel="stylesheet" href="../assets/fonts/gaegu.css">
+<script type="module">
+import * as art from "../src/art/owl.js";
+const add = (name, s) => document.body.insertAdjacentHTML("beforeend", `<figure><img src="${art.dataURL(s)}"><figcaption>${name}</figcaption></figure>`);
+art.OWL_FACES.forEach((f) => add(f, art.owlSVG(f)));
+add("feather", art.featherSVG()); add("clock", art.clockSVG()); add("zap", art.zapSVG()); add("bang", art.bangSVG());
+</script>

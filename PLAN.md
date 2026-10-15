@@ -88,3 +88,9 @@ test/                  node --test (judge, calibrate) + fixtures wajah
 1. Art final: digenerate (Google Flow seperti concept) lalu dipotong, atau tetap doodle SVG buatan kode?
 2. Boleh upload build draft (restricted, tidak publik) ke itch untuk tes kamera di iframe asli?
 3. Tes di HP asli (iPhone/Android) — Angel main sekali dari link lokal/itch draft.
+
+## 7. Catatan setelah M1–M2 (15 Okt 2026)
+- **Blink:** filter 120 ms dari GDD membuang hampir semua kedipan asli (di atas threshold cuma ~70–130 ms, 2–4 frame). Diganti: **2 frame berturut-turut** (≥30 ms). Diuji dengan video nyata: 12/15 kedipan tertangkap, 0 alarm palsu.
+- **Grace 400 ms** setelah STARE! sebelum judge aktif.
+- Threshold kedip = istirahat + 50% jarak ke puncak; senyum = istirahat + 45%. Kalibrasi gagal (tidak kedip/senyum) diulang sekali, lalu pakai default aman.
+- Verifikasi headless: `tools/check.mjs` (+ `--cam`, `--drive`, `--shotq`, `--mobile`, `--deny`), `test/drive-*.js`, footage public domain (`tools/fetch-fixtures.sh`, `tools/fake-cam.sh`).

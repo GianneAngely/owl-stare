@@ -9,3 +9,5 @@ test/fixtures/*.jpg
 test/fixtures/*.webm
 test/fixtures/frames/
 *.y4m
+report/
+REPORT.md
