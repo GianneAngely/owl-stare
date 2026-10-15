@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Owl Stare GDD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Nunito:wght@400;700;800;900&display=swap">
+<style>
+:root{--sky:#f4efe4;--sky2:#fbf8f1;--orange:#cfe3f3;--deep:#1f1f1f;--cream:#fbf8f1;--yellow:#f3c64b;--ink:#1f1f1f;--muted:#6b6660}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:17px/1.6 Nunito,system-ui,sans-serif}
+h1,h2,h3,.pop{font-family:Gaegu,Nunito,sans-serif;font-weight:400;letter-spacing:.02em;line-height:1.05;margin:0}
+p{margin:0}img{max-width:100%;display:block}
+/* hero: an owl that watches you */
+.hero{background:radial-gradient(circle at 50% 120%,var(--sky2),var(--sky) 60%,#ece5d6);color:var(--deep);text-align:center;padding:40px 16px 0;overflow:hidden;position:relative}
+.stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 10% 20%,#fff,transparent),radial-gradient(2px 2px at 80% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 60% 12%,#fff,transparent),radial-gradient(2px 2px at 30% 60%,#fff8,transparent),radial-gradient(1.5px 1.5px at 90% 70%,#fff,transparent);pointer-events:none}
+.hero h1{font-size:clamp(3.4rem,11vw,7.5rem);color:var(--yellow);color:var(--deep);position:relative}
+.hero .sub{font-weight:800;font-size:1.2rem;margin:12px auto 0;max-width:46ch;position:relative}
+.eyes{display:flex;justify-content:center;gap:clamp(48px,7vw,80px);margin:34px auto -70px;position:relative}
+.eye{width:clamp(130px,22vw,210px);aspect-ratio:1;border-radius:50%;background:#fff;border:9px solid var(--deep);position:relative;overflow:hidden;box-shadow:0 0 0 14px #dfe6ee,0 0 0 23px var(--deep)}
+.pupil{position:absolute;width:44%;aspect-ratio:1;border-radius:50%;background:var(--deep);left:28%;top:28%;transition:transform .08s}
+.pupil::after{content:"";position:absolute;width:30%;aspect-ratio:1;border-radius:50%;background:#fff;left:18%;top:16%}
+.lid{position:absolute;left:0;right:0;top:0;height:0;background:#dfe6ee;transition:height .09s}
+.eye.blink .lid{height:100%;border-bottom:8px solid var(--deep)}
+.beak{width:0;height:0;border-left:26px solid transparent;border-right:26px solid transparent;border-top:44px solid var(--yellow);margin:84px auto 0;position:relative;filter:drop-shadow(0 4px 0 var(--deep))}
+.tease{position:relative;margin:26px auto 0;padding:0 0 90px;font-family:Gaegu;font-size:1.6rem;color:var(--deep);min-height:1.6em}
+/* nav as fight ladder */
+nav{position:sticky;top:0;z-index:5;background:var(--deep)}
+nav .in{max-width:1100px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}
+nav a{flex:none;color:#e3ecf7;text-decoration:none;font-weight:900;font-size:.95rem;padding:6px 14px;border-radius:999px;border:2.5px solid transparent}
+nav a:hover,nav a.on{background:var(--yellow);color:var(--deep);border-color:var(--yellow)}
+main{max-width:1100px;margin:0 auto;padding:48px 16px 90px;display:grid;gap:60px}
+.round{display:grid;gap:22px}
+.tag{display:inline-block;justify-self:start;background:var(--orange);color:var(--deep);font-family:Gaegu;font-size:1.1rem;padding:6px 16px 3px;border:3px solid var(--deep);border-radius:12px;transform:rotate(-2deg);box-shadow:4px 4px 0 var(--deep)}
+.round h2{font-size:clamp(2.4rem,6vw,3.8rem);color:var(--deep)}
+.lede{font-size:1.15rem;max-width:62ch}
+.muted{color:var(--muted);font-size:.95rem}
+.panel{background:#fff;border:4px solid var(--deep);border-radius:24px;padding:clamp(18px,3vw,30px);box-shadow:8px 8px 0 var(--deep)}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr))}
+.grid2{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));align-items:center}
+.card{background:#fff;border:4px solid var(--deep);border-radius:20px;padding:16px 18px;display:grid;gap:6px;box-shadow:6px 6px 0 var(--c,var(--orange))}
+.card .ic{font-size:2.3rem;line-height:1}
+.card h3{font-size:1.55rem;color:var(--deep)}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:14px}
+.num{background:var(--yellow);border:4px solid var(--deep);border-radius:20px;padding:14px;text-align:center;box-shadow:5px 5px 0 var(--deep)}
+.num:nth-child(2){background:#d7e6f5}.num:nth-child(3){background:#e9edf2}.num:nth-child(4){background:#cfe7ef}
+.num b{display:block;font-family:Gaegu;font-size:2.8rem;line-height:1;color:var(--deep)}
+.num span{font-weight:800;font-size:.9rem}
+.pic{border:4px solid var(--deep);border-radius:20px;overflow:hidden;box-shadow:8px 8px 0 var(--deep)}
+.cap{text-align:center;font-weight:800;color:var(--muted);margin-top:10px}
+.speech{position:relative;background:var(--yellow);border:4px solid var(--deep);border-radius:24px;padding:16px 22px;font-family:Gaegu;font-size:1.5rem;max-width:620px;margin-left:auto;box-shadow:6px 6px 0 var(--deep)}
+.speech::after{content:"";position:absolute;right:46px;bottom:-26px;border:13px solid transparent;border-top-color:var(--deep)}
+.loop{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:14px}
+.loop div{background:#fff;border:4px solid var(--deep);border-radius:20px;padding:14px;text-align:center;font-weight:800}
+.loop .pop{display:block;font-size:2.2rem;color:#c9a227}
+.lose{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:18px}
+.lose .card{text-align:center;justify-items:center;--c:#e34b4b}
+.lose .ic{font-size:3.4rem}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:.98rem}
+th,td{padding:11px 14px;text-align:left;border-bottom:3px solid #dfe6ef;vertical-align:top}
+thead th{background:var(--deep);color:#fff;font-weight:900}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:Gaegu;font-size:1.4rem;color:#c9a227;width:48px}
+.tw{overflow-x:auto;border:4px solid var(--deep);border-radius:20px;box-shadow:8px 8px 0 var(--deep)}
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.flow span{background:#fff;border:3px solid var(--deep);border-radius:999px;padding:6px 14px;font-weight:800}
+.flow i{font-style:normal;font-weight:900;color:#c9a227}
+ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.q li{list-style:"🦉  "}
+footer{background:var(--deep);color:#e3ecf7;text-align:center;padding:26px 16px;font-weight:800}
+@media (prefers-reduced-motion:reduce){.pupil,.lid{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="stars"></div>
+  <h1>Owl Stare</h1>
+  <p class="sub">Game Design Document v0.2 · a webcam staring contest against owls who cheat</p>
+  <div class="eyes" aria-hidden="true">
+    <div class="eye"><div class="pupil"></div><div class="lid"></div></div>
+    <div class="eye"><div class="pupil"></div><div class="lid"></div></div>
+  </div>
+  <div class="beak" aria-hidden="true"></div>
+  <p class="tease" id="tease">Don't blink.</p>
+</header>
+
+<nav><div class="in">
+  <a href="#pitch">The pitch</a><a href="#loop">A match</a><a href="#rules">How you lose</a><a href="#owls">The owls</a><a href="#tricks">Dirty tricks</a><a href="#privacy">Privacy &amp; flow</a><a href="#art">Art &amp; sound</a><a href="#build">Build plan</a><a href="#questions">Questions</a>
+</div></nav>
+
+<main>
+
+<section class="round" id="pitch">
+  <span class="tag">Round 0 · read this first</span>
+  <h2>Don't blink. Don't laugh. Don't look away.</h2>
+  <p class="lede">A webcam staring contest against a ladder of owls who cheat. They pull faces, crack jokes and yell HOOT. The camera watches your eyes, your smile and your head, and everything happens inside the browser.</p>
+  <div class="big">
+    <div class="num"><b>8</b><span>owls on the ladder</span></div>
+    <div class="num"><b>3</b><span>ways to lose</span></div>
+    <div class="num"><b>4</b><span>kinds of cheating</span></div>
+    <div class="num"><b>0</b><span>photos of you saved or sent</span></div>
+  </div>
+  <div class="grid2">
+    <div><div class="pic"><img src="concept/keyart.jpg" alt="Key art: a round doodle snowy owl staring deadpan at you"></div><p class="cap">key art concept (Google Flow)</p></div>
+    <div class="tw"><table><tbody>
+      <tr><td>🎮</td><td><b>Genre</b><br>Comedy reaction challenge, party game</td></tr>
+      <tr><td>🌐</td><td><b>Platform</b><br>Web browser on itch.io, desktop and phone (front camera)</td></tr>
+      <tr><td>⚙️</td><td><b>Engine</b><br>Phaser 3 + MediaPipe Face Landmarker, in the browser</td></tr>
+      <tr><td>📷</td><td><b>Camera</b><br>Required. There is no non-camera mode.</td></tr>
+      <tr><td>🎨</td><td><b>Look</b><br>Hand-drawn round doodle: thick brush-pen lines, flat colours, lots of paper</td></tr>
+      <tr><td>🔤</td><td><b>Language</b><br>English</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="grid">
+    <div class="card"><span class="ic">😐</span><h3>Your face is the controller</h3><p>No buttons during a match. Just keep a straight face.</p></div>
+    <div class="card" style="--c:#9fb3c8"><span class="ic">🤪</span><h3>The owls are the show</h3><p>Every owl has a personality and a bag of dirty tricks.</p></div>
+    <div class="card" style="--c:#4bbf8a"><span class="ic">🔒</span><h3>Private by design</h3><p>Video never leaves the device, and nothing about your face is saved.</p></div>
+    <div class="card" style="--c:#ffd23f"><span class="ic">📤</span><h3>Made for sharing</h3><p>Short matches and a funny result card, perfect for clips.</p></div>
+  </div>
+</section>
+
+<section class="round" id="loop">
+  <span class="tag">Round 1 · one match</span>
+  <h2>3, 2, 1… STARE!</h2>
+  <div class="loop">
+    <div><span class="pop">1</span>Pick the next owl on the ladder</div>
+    <div><span class="pop">2</span>Countdown, the match starts</div>
+    <div><span class="pop">3</span>The owl cheats to make you blink, smile or look away</div>
+    <div><span class="pop">4</span>Survive the timer, or break and watch the owl celebrate</div>
+    <div><span class="pop">5</span>Result card, then retry or climb</div>
+  </div>
+  <div class="grid2">
+    <div><div class="pic"><img src="concept/screen.jpg" alt="Gameplay mockup: owl making a silly face, timer bar on top, webcam preview bottom right"></div><p class="cap">gameplay mockup: timer on top, your camera bottom right</p></div>
+    <p class="speech">I have never lost a staring contest. I also have never blinked. Ever. Probably.</p>
+  </div>
+</section>
+
+<section class="round" id="rules">
+  <span class="tag">Round 2 · all three are on</span>
+  <h2>How you lose</h2>
+  <div class="lose">
+    <div class="card"><span class="ic">😑</span><h3>Blink</h3><p>Eye-blink signal above your threshold for at least ~120 ms, which filters out noise.</p></div>
+    <div class="card"><span class="ic">😆</span><h3>Smile or laugh</h3><p>Smile signal above your threshold, or the jaw opening together with a smile.</p></div>
+    <div class="card"><span class="ic">🙈</span><h3>Look away</h3><p>No face found, or the head turned past a limit for more than 0.5 s.</p></div>
+  </div>
+  <div class="panel"><h3 style="font-size:1.6rem">5-second calibration at first launch</h3>
+    <div class="flow" style="margin-top:10px"><span>Relax and look at the camera</span><i>→</i><span>Blink once</span><i>→</i><span>Smile</span><i>→</i><span>Your thresholds are saved</span></div></div>
+</section>
+
+<section class="round" id="owls">
+  <span class="tag">Round 3 · the ladder</span>
+  <h2>Meet the cheaters</h2>
+  <div class="pic"><img src="concept/lineup.jpg" alt="Doodle lineup of round white and grey owls from a fluff ball to a crowned boss"></div>
+  <p class="cap">lineup concept: tiny beginner on the left, snowy boss Hootington on the right</p>
+  <div class="tw"><table><thead><tr><th>#</th><th>Owl</th><th>Personality</th><th>Main trick</th><th>Match</th></tr></thead><tbody>
+    <tr><td>1</td><td><b>Hoot</b></td><td>The beginner</td><td>Funny faces only</td><td>10 s</td></tr>
+    <tr><td>2</td><td><b>Professor Plume</b></td><td>Pompous</td><td>Reads terrible jokes on screen</td><td>15 s</td></tr>
+    <tr><td>3</td><td><b>Twitchy</b></td><td>Can't sit still</td><td>Feathers, a fly crossing the screen</td><td>20 s</td></tr>
+    <tr><td>4</td><td><b>Boomer</b></td><td>Loud</td><td>Sudden HOOT! and squeaky toys</td><td>20 s</td></tr>
+    <tr><td>5</td><td><b>Grandma Owlbert</b></td><td>Sweet, then sneaky</td><td>Slow and kind, then a surprise face</td><td>25 s</td></tr>
+    <tr><td>6</td><td><b>DJ Night</b></td><td>Party owl</td><td>Silly music and a dance</td><td>25 s</td></tr>
+    <tr><td>7</td><td><b>The Twins</b></td><td>Double trouble</td><td>Two owls, overlapping tricks</td><td>30 s</td></tr>
+    <tr><td>8</td><td><b>Great Horned Hootington</b></td><td>The boss</td><td>Every trick, mixed</td><td>45 s</td></tr>
+  </tbody></table></div>
+  <p class="muted">Names are working names; match lengths are starting values for playtesting.</p>
+</section>
+
+<section class="round" id="tricks">
+  <span class="tag">Round 4 · all four types</span>
+  <h2>Dirty tricks</h2>
+  <div class="grid">
+    <div class="card"><span class="ic">🤪</span><h3>Faces</h3><p>A big set of ugly, silly and surprising owl faces. This is the heart of the art.</p></div>
+    <div class="card" style="--c:#9fb3c8"><span class="ic">🪶</span><h3>Screen chaos</h3><p>Feathers flying, screen shake, a bug walking across, a fake pop-up.</p></div>
+    <div class="card" style="--c:#e34b4b"><span class="ic">📢</span><h3>Sounds</h3><p>HOOT!, a squeaky toy, a ticklish little tune.</p></div>
+    <div class="card" style="--c:#ffd23f"><span class="ic">💬</span><h3>Jokes</h3><p>One-line jokes appear on screen, and reading them is the trap.</p></div>
+  </div>
+  <p class="muted">Tricks are drawn at random from each owl's set; later owls overlap them.</p>
+</section>
+
+<section class="round" id="privacy">
+  <span class="tag">Round 5 · trust first</span>
+  <h2>Privacy and screens</h2>
+  <div class="grid2">
+    <div class="panel"><h3 style="font-size:1.6rem">Privacy promises</h3>
+      <ul style="margin-top:10px">
+        <li>Camera video is processed only in the browser; no image or video leaves the device.</li>
+        <li>This is explained in plain words <b>before</b> the browser asks for the camera.</li>
+        <li>The small self-preview can be hidden.</li>
+        <li>The result card has no face: "You out-stared Professor Plume for 42 s", the owl and the itch link.</li>
+      </ul></div>
+    <div class="panel"><h3 style="font-size:1.6rem">Screen flow</h3>
+      <div class="flow" style="margin-top:10px"><span>Title</span><i>→</i><span>Camera explainer</span><i>→</i><span>Browser prompt</span><i>→</i><span>Calibration</span><i>→</i><span>Ladder map</span><i>→</i><span>Match</span><i>→</i><span>Result card</span></div>
+      <p class="muted" style="margin-top:12px">Camera denied: a friendly screen explains it is required, with a retry button.</p></div>
+  </div>
+</section>
+
+<section class="round" id="art">
+  <span class="tag">Round 6 · look and feel</span>
+  <h2>Doodles that stare back</h2>
+  <div class="grid">
+    <div class="card"><span class="ic">🎨</span><h3>Round doodle owls</h3><p>Chubby egg-shaped owls, thick uneven brush-pen lines, flat colours and no shading. Comedy comes from simple, deadpan faces.</p></div>
+    <div class="card" style="--c:#9fb3c8"><span class="ic">🌙</span><h3>Soft palette</h3><p>Off-white paper, white and grey owls, small yellow eyes, soft pale blue and yellow accents.</p></div>
+    <div class="card" style="--c:#4bbf8a"><span class="ic">🥁</span><h3>Audio</h3><p>Tense ticking during a match, comedy stings when you lose, a fanfare when you win.</p></div>
+  </div>
+</section>
+
+<section class="round" id="build">
+  <span class="tag">Round 7 · how it gets built</span>
+  <h2>Build plan</h2>
+  <div class="grid2">
+    <div class="panel"><ul>
+      <li>MediaPipe <b>FaceLandmarker</b> with face blendshapes, video mode, ~30 fps.</li>
+      <li>itch.io's game iframe includes <b>allow="camera"</b> (seen on the Cake Tower page), so the camera should work; test on a real itch page first.</li>
+      <li>Phones: front camera, portrait layout.</li>
+      <li>Ladder progress saved in localStorage.</li>
+    </ul></div>
+    <div class="loop" style="grid-template-columns:1fr 1fr">
+      <div><span class="pop">1</span>Tech spike: detection + calibration, tested in itch</div>
+      <div><span class="pop">2</span>Prototype: one owl, two tricks, full match</div>
+      <div><span class="pop">3</span>All 8 owls and their tricks</div>
+      <div><span class="pop">4</span>Result card, polish, itch page, promo video</div>
+    </div>
+  </div>
+</section>
+
+<section class="round" id="questions">
+  <span class="tag">Round 8 · still to decide</span>
+  <h2>Open questions</h2>
+  <ul class="q">
+    <li>Final owl names and personalities.</li>
+    <li>Match length per owl (playtest).</li>
+    <li>Does blink detection work well with glasses? Calibration should help; test it.</li>
+    <li>Final game title.</li>
+  </ul>
+</section>
+
+</main>
+<footer>Owl Stare · GDD v0.2 · 2026-10-13 · Angel's Desk</footer>
+
+<script>
+// the owl watches the cursor and blinks now and then; it gets annoyed if you scroll fast
+const pupils = [...document.querySelectorAll('.pupil')], eyes = [...document.querySelectorAll('.eye')];
+addEventListener('pointermove', e => pupils.forEach(p => {
+  const b = p.parentElement.getBoundingClientRect(), dx = e.clientX - (b.left + b.width / 2), dy = e.clientY - (b.top + b.height / 2), d = Math.hypot(dx, dy) || 1, m = b.width * 0.2;
+  p.style.transform = `translate(${dx / d * Math.min(m, d / 6)}px,${dy / d * Math.min(m, d / 6)}px)`;
+}));
+const blink = () => { eyes.forEach(e => e.classList.add('blink')); setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 140); };
+(function loop() { setTimeout(() => { blink(); loop(); }, 2500 + Math.random() * 3500); })();
+const lines = ["Don't blink.", "You blinked. I saw it.", "Is that a smile?", "HOOT!", "Still staring…", "I'm not cheating. You're cheating."];
+let i = 0; setInterval(() => { i = (i + 1) % lines.length; document.getElementById('tease').textContent = lines[i]; }, 2600);
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { threshold: .3 });
+document.querySelectorAll('.round').forEach(s => io.observe(s));
+</script>
+</body>
+</html>

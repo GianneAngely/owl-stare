@@ -1,0 +1,11 @@
+# work files and references (large, or not ours to publish)
+refs/
+concept/old/
+.DS_Store
+node_modules/
+dist/
+# third-party test footage: fetched by tools/fetch-fixtures.sh, see test/fixtures/SOURCES.md
+test/fixtures/*.jpg
+test/fixtures/*.webm
+test/fixtures/frames/
+*.y4m

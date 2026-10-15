@@ -1,0 +1,9 @@
+{
+  "name": "owl-stare",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node tools/serve.mjs 8080",
+    "test": "node --test test/"
+  }
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owl Stare · tech spike</title>
+<link rel="stylesheet" href="assets/fonts/gaegu.css">
+<style>
+  :root { --paper: #f7f3e8; --ink: #2b2622; --blue: #b9d0e6; --yellow: #f3dd8a; --red: #e48a7a; }
+  body { margin: 0; padding: 16px; background: var(--paper); color: var(--ink); font: 20px/1.2 "Gaegu", sans-serif; }
+  h1 { margin: 0 0 8px; font-size: 34px; }
+  main { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 16px; max-width: 960px; }
+  @media (max-width: 640px) { main { grid-template-columns: 1fr; } }
+  video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transform: scaleX(-1); border: 3px solid var(--ink); border-radius: 18px; background: #ddd; }
+  .row { display: grid; grid-template-columns: 72px 1fr 52px; align-items: center; gap: 8px; margin: 6px 0; }
+  .bar { position: relative; height: 18px; border: 2px solid var(--ink); border-radius: 9px; overflow: hidden; background: #fff; }
+  .bar i { position: absolute; inset: 0 auto 0 0; background: var(--blue); }
+  .bar b { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--ink); }
+  button { font: inherit; font-weight: 700; padding: 6px 16px; margin: 4px 6px 4px 0; background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 14px; cursor: pointer; }
+  #say { font-size: 30px; font-weight: 700; min-height: 36px; }
+  #verdict { font-size: 26px; font-weight: 700; }
+  #log { font-size: 17px; max-height: 180px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1>Owl Stare · tech spike</h1>
+<p>Camera stays on this device. Nothing is uploaded.</p>
+<main>
+  <div>
+    <video id="cam" playsinline muted></video>
+    <div id="status">press start</div>
+    <button id="start">Start camera</button>
+    <button id="calib" disabled>Calibrate</button>
+    <button id="judge" disabled>Stare test</button>
+  </div>
+  <div>
+    <div id="say"></div>
+    <div id="meters"></div>
+    <div id="verdict"></div>
+    <div id="th"></div>
+    <div id="log"></div>
+  </div>
+</main>
+<script type="module">
+import { openCamera, loadLandmarker, track } from "./src/face/tracker.js";
+import { calibrate, DEFAULTS } from "./src/face/calibrate.js";
+import { createJudge } from "./src/face/judge.js";
+
+const $ = (id) => document.getElementById(id);
+const video = $("cam");
+const auto = new URLSearchParams(location.search).has("auto");
+// state the headless checks read
+const spike = (window.spike = { phase: "idle", frames: 0, faceFrames: 0, fps: 0, latest: null, th: { ...DEFAULTS }, events: [], calib: null, error: null, samples: [] });
+
+const METERS = [["blink", (s) => (s.blinkL + s.blinkR) / 2, () => spike.th.blink, 1], ["smile", (s) => s.smile, () => spike.th.smile, 1],
+  ["jaw", (s) => s.jaw, () => spike.th.jaw, 1], ["yaw", (s) => Math.abs(s.yaw - spike.th.yaw0), () => spike.th.yaw, 60], ["pitch", (s) => Math.abs(s.pitch - spike.th.pitch0), () => spike.th.pitch, 60]];
+$("meters").innerHTML = METERS.map(([k]) => `<div class="row"><span>${k}</span><div class="bar"><i id="m-${k}"></i><b id="t-${k}"></b></div><span id="v-${k}"></span></div>`).join("");
+
+const log = (msg) => { spike.events.push({ t: Math.round(performance.now()), msg }); $("log").insertAdjacentHTML("afterbegin", `<div>${(performance.now() / 1000).toFixed(1)}s ${msg}</div>`); };
+const showTh = () => ($("th").textContent = `thresholds · blink ${spike.th.blink.toFixed(2)} · smile ${spike.th.smile.toFixed(2)} · jaw ${spike.th.jaw.toFixed(2)} · yaw0 ${spike.th.yaw0.toFixed(0)}°`);
+try { Object.assign(spike.th, JSON.parse(localStorage.getItem("owlstare.th")) ?? {}); } catch {}
+showTh();
+
+let judge = null, collect = null, fpsCount = 0, fpsAt = performance.now();
+function onSignal(s) {
+  spike.frames++; spike.latest = s; fpsCount++;
+  if (s.face) spike.faceFrames++;
+  if (spike.samples.length < 20000) spike.samples.push(s.face ? [Math.round(s.t), +((s.blinkL + s.blinkR) / 2).toFixed(3), +s.smile.toFixed(3), +s.jaw.toFixed(3), +s.yaw.toFixed(1), +s.pitch.toFixed(1)] : [Math.round(s.t)]);
+  if (s.t - fpsAt > 1000) { spike.fps = Math.round((fpsCount * 1000) / (s.t - fpsAt)); fpsCount = 0; fpsAt = s.t; }
+  collect?.push(s);
+  for (const [k, f, th, max] of METERS) {
+    const v = s.face ? f(s) : 0;
+    $(`m-${k}`).style.width = `${Math.min(100, (v / max) * 100)}%`;
+    $(`m-${k}`).style.background = s.face && v > th() ? "var(--red)" : "";
+    $(`t-${k}`).style.left = `${(th() / max) * 100}%`;
+    $(`v-${k}`).textContent = s.face ? v.toFixed(2) : "–";
+  }
+  $("status").textContent = s.face ? `face ✓ · ${spike.fps} fps` : `no face · ${spike.fps} fps`;
+  if (judge) {
+    const v = judge.update(s);
+    if (v) { log(`LOST: ${v}`); $("verdict").textContent = `you ${{ blink: "blinked", smile: "smiled", away: "looked away" }[v]}!`; judge.reset(); }
+  }
+}
+
+async function start() {
+  $("start").disabled = true;
+  try {
+    spike.phase = "camera"; $("status").textContent = "asking for the camera…";
+    await openCamera(video);
+    spike.phase = "loading"; $("status").textContent = "loading the owl brain…";
+    const t0 = performance.now();
+    const lm = await loadLandmarker();
+    log(`model ready in ${Math.round(performance.now() - t0)} ms`);
+    track(video, lm, onSignal);
+    spike.phase = "tracking";
+    $("calib").disabled = $("judge").disabled = false;
+    if (auto) { await runCalibration(); startJudge(); }
+  } catch (e) {
+    spike.error = e.kind ?? e.message; spike.phase = "error";
+    $("status").textContent = { denied: "Camera blocked. Owl Stare needs it to see you blink — allow it and retry.", nocamera: "No camera found.",
+      unsupported: "This browser can't use the camera here.", busy: "Another app is using the camera." }[e.kind] ?? `error: ${e.message}`;
+    $("start").disabled = false;
+    log(`camera error: ${spike.error}`);
+  }
+}
+
+const phase = async (text, ms) => { $("say").textContent = text; collect = []; await new Promise((r) => setTimeout(r, ms)); const a = collect; collect = null; return a; };
+async function runCalibration() {
+  judge = null;
+  spike.phase = "calibrating";
+  const relax = await phase("Relax and look at me…", 2000);
+  const blink = await phase("Now blink!", 1500);
+  const smile = await phase("Now smile!", 1500);
+  const r = calibrate({ relax, blink, smile });
+  spike.calib = { ok: r.ok, problem: r.problem, counts: [relax.length, blink.length, smile.length] };
+  spike.th = r.th;
+  try { localStorage.setItem("owlstare.th", JSON.stringify(r.th)); } catch {}
+  $("say").textContent = r.ok ? "Got it!" : `Calibration problem: ${r.problem} (using safe defaults)`;
+  log(`calibrated ok=${r.ok} problem=${r.problem}`);
+  showTh();
+}
+function startJudge() { judge = createJudge(spike.th); spike.phase = "judging"; $("verdict").textContent = "staring…"; log("stare test on"); }
+
+// inside an iframe (itch embed test), report state to the host page
+if (parent !== window) setInterval(() => parent.postMessage({ spike: { phase: spike.phase, error: spike.error, frames: spike.frames, events: spike.events.map((e) => e.msg) } }, "*"), 500);
+$("start").onclick = start;
+$("calib").onclick = runCalibration;
+$("judge").onclick = startJudge;
+if (auto) start();
+</script>
+</body>
+</html>
