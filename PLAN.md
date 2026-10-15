@@ -94,3 +94,9 @@ test/                  node --test (judge, calibrate) + fixtures wajah
 - **Grace 400 ms** setelah STARE! sebelum judge aktif.
 - Threshold kedip = istirahat + 50% jarak ke puncak; senyum = istirahat + 45%. Kalibrasi gagal (tidak kedip/senyum) diulang sekali, lalu pakai default aman.
 - Verifikasi headless: `tools/check.mjs` (+ `--cam`, `--drive`, `--shotq`, `--mobile`, `--deny`), `test/drive-*.js`, footage public domain (`tools/fetch-fixtures.sh`, `tools/fake-cam.sh`).
+
+## 8. Catatan M3 (16 Okt 2026)
+- Keputusan Angel: art final = doodle SVG style A; Hoot tetap face + feathers; itch draft boleh (zip: `tools/build-zip.sh`).
+- Owl = 3 layer (body per owl, face bersama, front props) di `src/art/owl-sprite.js`: 8 body + 9 face + 5 front, bukan 72 gambar utuh.
+- Trik baru: joke, fly, hoot, squeak, popup, knit, surprise, dance. Twins = 2 owl dengan jadwal trik sendiri-sendiri; boss `overlap` (trik berikutnya tidak menunggu). Trik kembali ke `owl.home`, jadi trik yang tumpang-tindih tidak menggeser owl.
+- Ladder: owl terkunci = siluet tinta; terbuka bila owl sebelumnya dikalahkan (`localStorage owlstare.v1.beaten`).

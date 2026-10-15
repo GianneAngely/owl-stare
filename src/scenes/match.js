@@ -1,4 +1,5 @@
 // One staring match: 3-2-1-STARE!, the owl cheats, the judge watches your face, you break or the clock runs out.
+import { OwlSprite } from "../art/owl-sprite.js";
 import { D, paper, text, enter, note, hook, hex } from "../ui.js";
 import { INK, YELLOW, BLUE, BELLY } from "../art/owl.js";
 import { sfx } from "../audio.js";
@@ -7,25 +8,28 @@ import { createJudge } from "../face/judge.js";
 import { DEFAULTS } from "../face/calibrate.js";
 import { load } from "../store.js";
 import { TRICKS } from "../tricks/index.js";
-import HOOT from "../owls/hoot.js";
+import { byId } from "../owls/index.js";
 
 const GRACE = 400;   // ms after STARE! before the judge starts watching
+const VERDICT = { blink: "You blinked!", smile: "You smiled!", away: "You looked away!" };
 
 export class Match extends Phaser.Scene {
   constructor() { super("Match"); }
-  create() {
+  create({ owl } = {}) {
     enter(this);
     paper(this);
-    this.owlData = HOOT;
+    this.owlData = byId(owl);
     this.state = "countdown";
     this.elapsed = 0;
-    this.owl = this.add.image(0, 0, "owl-idle");
+    this.timers = [];
+    this.owls = (this.owlData.twins ? [0, 1] : [0]).map(() => new OwlSprite(this, this.owlData.id, "idle"));
     this.name = text(this, 0, 0, this.owlData.name, 30);
     this.bar = this.add.graphics();
     this.clock = this.add.image(0, 0, "clock");
     this.big = text(this, 0, 0, "", 120).setDepth(10);
     this.hint = text(this, 0, 0, "don't blink · don't smile · don't look away", 22, { bold: false });
     this.layout(this.scale.width, this.scale.height);
+    note(`match ${this.owlData.id}`);
 
     this.judge = createJudge({ ...DEFAULTS, ...load().th });
     const off = onFace((s) => this.state === "stare" && this.check(s));
@@ -39,27 +43,29 @@ export class Match extends Phaser.Scene {
     this.tweens.add({ targets: this.big, scale, duration: 300, ease: "Back.out" });
   }
   begin() {
-    // STARE! sits above the owl's eyes (between the timer bar and the top of the face), shrunk to fit if needed
-    const barBottom = this.barBox.y + this.barBox.h * 1.6, faceTop = this.owl.y - this.owl.displayHeight * 0.25;
+    // STARE! sits above the owls' eyes (between the timer bar and the top of the face), shrunk to fit if needed
+    const o = this.owls[0], barBottom = this.barBox.y + this.barBox.h * 1.6, faceTop = o.y - o.displayHeight * 0.25;
     this.big.setText("STARE!").setScale(1).setY((barBottom + faceTop) / 2);
     this.pop("STARE!", Math.min(1, (faceTop - barBottom) / this.big.height));
     sfx.stare();
     this.tweens.add({ targets: this.big, alpha: 0, delay: 600, duration: 300 });
-    this.owl.setTexture("owl-stare");
+    this.owls.forEach((o) => o.setFace(o.rest));
     this.judge.reset();
     this.state = "stare";
     note("stare");
-    this.scheduleTrick(1200);
-    hook.trick = (name) => TRICKS[name](this, this.owl, () => {});   // test hook: force a trick now
+    // each owl cheats on its own clock; the twins start apart so their tricks overlap rather than mirror
+    this.owls.forEach((o, i) => this.scheduleTrick(o, 1200 + i * 1500));
+    hook.trick = (name, i = 0) => TRICKS[name](this, this.owls[i], () => {});   // test hook: force a trick now
   }
-  scheduleTrick(delay) {
+  scheduleTrick(owl, delay) {
     const [a, b] = this.owlData.gap;
-    this.trickTimer = this.time.delayedCall(delay ?? Phaser.Math.Between(a, b), () => {
-      if (this.state !== "stare") return;
+    this.timers.push(this.time.delayedCall(delay ?? Phaser.Math.Between(a, b), () => {
+      if (this.state !== "stare" || hook.quiet) return;   // hook.quiet: tests force tricks one at a time
       const name = Phaser.Utils.Array.GetRandom(this.owlData.tricks);
       note(`trick ${name}`);
-      TRICKS[name](this, this.owl, () => this.state === "stare" && this.scheduleTrick());
-    });
+      if (this.owlData.overlap) this.scheduleTrick(owl);   // the boss doesn't wait for a trick to finish
+      TRICKS[name](this, owl, () => !this.owlData.overlap && this.state === "stare" && this.scheduleTrick(owl));
+    }));
   }
   check(sig) {
     if (this.elapsed < GRACE) return;   // nobody loses to the blink they did while reading STARE!
@@ -76,20 +82,20 @@ export class Match extends Phaser.Scene {
   }
   end(reason) {
     this.state = "over";
-    this.trickTimer?.remove();
+    this.timers.forEach((t) => t.remove());
     const seconds = Math.min(this.elapsed, this.owlData.seconds * 1000) / 1000;
     hook.result = { owl: this.owlData.id, won: !reason, reason, seconds: +seconds.toFixed(1) };
     note(`end ${reason ?? "win"} at ${seconds.toFixed(1)}s`);
-    this.tweens.killTweensOf(this.owl);
-    this.owl.setAngle(0).setTexture(reason ? "owl-laugh" : "owl-shock");
+    this.owls.forEach((o) => { this.tweens.killTweensOf(o); o.setAngle(0).setFace(reason ? "laugh" : "shock"); });
     this.layout(this.scale.width, this.scale.height);
     // the verdict goes under the owl, where the hint was, so the owl's face stays visible
+    const o = this.owls[0];
     this.hint.setVisible(false);
     this.tweens.killTweensOf(this.big);   // a loss right after STARE! must not inherit its fade-out
-    this.big.setWordWrapWidth(this.scale.width * 0.9).setY(this.owl.y + this.owl.displayHeight * 0.58);
-    this.pop(reason ? this.owlData.wins[reason] : "You win!");
+    this.big.setWordWrapWidth(this.scale.width * 0.9).setY(o.y + o.displayHeight * 0.58);
+    this.pop(reason ? VERDICT[reason] : "You win!");
     this.big.setFontSize(Math.round(this.bigSize * 0.5));
-    if (reason) { sfx.lose(); this.tweens.add({ targets: this.owl, y: "-=14", duration: 120, yoyo: true, repeat: 5 }); }
+    if (reason) { sfx.lose(); this.tweens.add({ targets: this.owls, y: "-=14", duration: 120, yoyo: true, repeat: 5 }); }
     else sfx.win();
     this.drawBar();
     this.time.delayedCall(2200, () => this.scene.start("Result", hook.result));
@@ -106,8 +112,11 @@ export class Match extends Phaser.Scene {
     this.barBox = { x: (w - bw) / 2 + bh, y: h * 0.09, w: bw - bh, h: bh };
     this.clock.setDisplaySize(bh * 2.6, bh * 2.7).setPosition(this.barBox.x - bh * 0.6, this.barBox.y + bh / 2);
     this.name.setFontSize(Math.round(Math.max(22 * D, u * 4.4))).setPosition(w / 2, this.barBox.y - bh * 0.9);
-    const oh = portrait ? Math.min(h * 0.5, w * 0.95) : h * 0.62;
-    this.owl.setDisplaySize(oh * 400 / 440, oh).setPosition(w / 2, h * (portrait ? 0.45 : 0.53));
+    const n = this.owls.length, size = this.owlData.size;
+    // the biggest owl stays inside the frame: height capped by the space under the bar and by the width per owl
+    const room = portrait ? Math.min(h * 0.5, (w * 0.95) / n * 1.1) : Math.min(h * 0.62, (w * 0.8) / n * 1.1);
+    const oh = room * Math.min(1, size + 0.1), y = h * (portrait ? 0.45 : 0.53) + (room - oh) * 0.4;
+    this.owls.forEach((o, i) => o.place(w / 2 + (i - (n - 1) / 2) * oh * 0.95, y, oh));
     this.bigSize = Math.max(80 * D, u * 22);
     this.big.setFontSize(Math.round(this.bigSize)).setPosition(w / 2, h * (portrait ? 0.45 : 0.5)).setStroke(BELLY, this.bigSize * 0.12);
     this.hint.setFontSize(Math.round(Math.max(18 * D, u * 3.6))).setWordWrapWidth(w * (portrait ? 0.9 : 0.5)).setPosition(portrait ? w / 2 : w * 0.4, h * (portrait ? 0.79 : 0.92));

@@ -11,10 +11,11 @@
   await until(() => owl.scene === "CameraAsk"); owl.press("camera");
   await until(() => owl.scene === "Calibrate");
   await sleep(500); await shot("r1-calib");
-  while (owl.scene === "Calibrate") {
+  while (owl.scene === "Calibrate") {   // retries when calibration asks to
     if (owl.buttons.calibrate && !owl.log.at(-1)[1].startsWith("press calibrate")) owl.press("calibrate");
     await sleep(300);
   }
+  await until(() => owl.scene === "Ladder"); owl.press("stare");
   await until(() => owl.log.some((l) => l[1] === "stare"));
   await sleep(1500); await shot("r2-match");
   await until(() => owl.log.some((l) => l[1].startsWith("end")));

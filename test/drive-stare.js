@@ -10,6 +10,7 @@
   localStorage.setItem("owlstare.v1", JSON.stringify({ th: { blink: 0.5, smile: 0.5, jaw: 0.35, yaw: 25, pitch: 20, yaw0: 0, pitch0: 0 } }));
   await until(() => window.owl?.scene === "Title"); owl.press("play");
   await until(() => owl.scene === "CameraAsk"); owl.press("camera");
+  await until(() => owl.scene === "Ladder"); owl.press("stare");
   await until(() => count("stare") === 1);
   await sleep(250); await shot("stare");
   await until(() => owl.scene === "Result"); await sleep(500); await shot("result-win");

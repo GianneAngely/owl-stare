@@ -1,10 +1,11 @@
 // 5-second calibration (GDD §4): relax, blink, smile. Thresholds are saved so it runs once.
+import { OwlSprite } from "../art/owl-sprite.js";
 import { D, paper, text, button, enter, note, hook } from "../ui.js";
 import { onFace } from "../face/source.js";
 import { calibrate } from "../face/calibrate.js";
 import { save } from "../store.js";
 
-const STEPS = [["relax", "Relax and look at the owl", 2000, "owl-idle"], ["blink", "Now blink!", 1500, "owl-blink"], ["smile", "Now smile!", 1500, "owl-laugh"]];
+const STEPS = [["relax", "Relax and look at the owl", 2000, "idle"], ["blink", "Now blink!", 1500, "blink"], ["smile", "Now smile!", 1500, "laugh"]];
 const RETRY = { blink: "I didn't see a blink. Once more, with a big slow blink.", smile: "I didn't see a smile. Once more, with a big grin.",
   noface: "I can't see your face. Face the camera in good light, then try again." };
 
@@ -14,7 +15,7 @@ export class Calibrate extends Phaser.Scene {
     enter(this);
     paper(this);
     this.tries = 0;
-    this.owl = this.add.image(0, 0, "owl-idle");
+    this.owl = new OwlSprite(this, "hoot", "idle");
     this.head = text(this, 0, 0, "Let's learn your face", 46);
     this.say = text(this, 0, 0, "", 34);
     this.dots = this.add.graphics();
@@ -29,14 +30,14 @@ export class Calibrate extends Phaser.Scene {
     for (const [i, [key, line, ms, tex]] of STEPS.entries()) {
       this.step = i;
       this.say.setText(line);
-      this.owl.setTexture(tex);
+      this.owl.setFace(tex);
       this.drawDots();
       got[key] = await this.collect(ms);
     }
     const r = calibrate(got);
     note(`calibrated ok=${r.ok} problem=${r.problem} tries=${this.tries}`);
     hook.calibration = r;
-    this.owl.setTexture("owl-idle");
+    this.owl.setFace("idle");
     // a missed blink or smile gets one retry, then the safe defaults; no face always needs a retry
     if (r.problem === "noface" || (!r.ok && this.tries < 2)) {
       this.say.setText(RETRY[r.problem]);
@@ -45,7 +46,7 @@ export class Calibrate extends Phaser.Scene {
     }
     save({ th: r.th });
     this.say.setText("Got it! Now… stare.");
-    this.time.delayedCall(900, () => this.scene.start("Match"));
+    this.time.delayedCall(900, () => this.scene.start("Ladder"));
   }
   collect(ms) {
     const samples = [];

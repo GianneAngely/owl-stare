@@ -1,3 +1,10 @@
 import { face } from "./face.js";
 import { feathers } from "./feathers.js";
-export const TRICKS = { face, feathers };
+import { joke } from "./joke.js";
+import { fly } from "./fly.js";
+import { hoot } from "./hoot.js";
+import { squeak } from "./squeak.js";
+import { popup } from "./popup.js";
+import { knit, surprise } from "./grandma.js";
+import { dance } from "./dance.js";
+export const TRICKS = { face, feathers, joke, fly, hoot, squeak, popup, knit, surprise, dance };

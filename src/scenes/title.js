@@ -1,3 +1,4 @@
+import { OwlSprite } from "../art/owl-sprite.js";
 import { D, paper, text, button, enter } from "../ui.js";
 import { unlock } from "../audio.js";
 import { face } from "../face/source.js";
@@ -8,16 +9,16 @@ export class Title extends Phaser.Scene {
   create() {
     enter(this);
     paper(this);
-    this.owl = this.add.image(0, 0, "owl-idle");
+    this.owl = new OwlSprite(this, "hoot", "idle");
     this.title = text(this, 0, 0, "Owl Stare", 80);
     this.sub = text(this, 0, 0, "Don't blink. Don't laugh. Don't look away.", 28, { bold: false });
     this.play = button(this, "play", "Play", 40, () => {
       unlock();
       if (!face.ready) return this.scene.start("CameraAsk");
-      this.scene.start(load().th ? "Match" : "Calibrate");
+      this.scene.start(load().th ? "Ladder" : "Calibrate");
     });
     // the owl blinks at you now and then, which is rude in a staring contest
-    this.time.addEvent({ delay: 2600, loop: true, callback: () => { this.owl.setTexture("owl-blink"); this.time.delayedCall(160, () => this.owl.setTexture("owl-idle")); } });
+    this.time.addEvent({ delay: 2600, loop: true, callback: () => { this.owl.setFace("blink"); this.time.delayedCall(160, () => this.owl.setFace("idle")); } });
     this.tweens.add({ targets: this.owl, y: "+=6", duration: 1400, yoyo: true, repeat: -1, ease: "Sine.inOut" });
     this.layout(this.scale.width, this.scale.height);
   }

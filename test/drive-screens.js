@@ -22,6 +22,7 @@
   owl.press("calibrate");
   await sleep(2300); face.blinkL = face.blinkR = 0.9; await sleep(300); face.blinkL = face.blinkR = 0.08;
   await sleep(900); face.smile = 0.8; await shot("5-calib-smile"); await sleep(300); face.smile = 0.03;
+  await until(() => owl.scene === "Ladder"); await sleep(400); await shot("5b-ladder"); owl.press("stare");
   await until(() => owl.scene === "Match");
   await sleep(900); await shot("6-countdown");
   await until(() => said("stare"));

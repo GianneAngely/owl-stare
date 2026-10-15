@@ -1,4 +1,5 @@
 // Camera explainer -> browser prompt -> model load. Denied / missing camera lands on a friendly retry screen.
+import { OwlSprite } from "../art/owl-sprite.js";
 import { D, paper, text, button, enter, note } from "../ui.js";
 import { face, startCamera, startTracking } from "../face/source.js";
 import { load } from "../store.js";
@@ -18,7 +19,7 @@ export class CameraAsk extends Phaser.Scene {
   create() {
     enter(this);
     paper(this);
-    this.owl = this.add.image(0, 0, "owl-idle");
+    this.owl = new OwlSprite(this, "hoot", "idle");
     this.head = text(this, 0, 0, "The owl needs to see you", 50);
     this.body = text(this, 0, 0, WHY, 28, { bold: false });
     this.status = text(this, 0, 0, "", 28);
@@ -37,7 +38,7 @@ export class CameraAsk extends Phaser.Scene {
       return this.scene.start("Denied", { kind: e.kind ?? "error" });
     }
     showPreview(!face.fake);
-    this.scene.start(load().th ? "Match" : "Calibrate");
+    this.scene.start(load().th ? "Ladder" : "Calibrate");
   }
   layout(w, h) {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1, oh = portrait ? h * 0.22 : h * 0.3;
@@ -56,7 +57,7 @@ export class Denied extends Phaser.Scene {
     paper(this);
     this.kind = kind;
     const [head, body] = PROBLEM[kind] ?? PROBLEM.error;
-    this.owl = this.add.image(0, 0, "owl-shock");
+    this.owl = new OwlSprite(this, "hoot", "shock");
     this.head = text(this, 0, 0, head, 50);
     this.body = text(this, 0, 0, body, 28, { bold: false });
     this.retry = button(this, "retry", "Try again", 36, () => this.scene.start("CameraAsk"));

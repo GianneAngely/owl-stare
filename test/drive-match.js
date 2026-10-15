@@ -16,6 +16,7 @@
   owl.press("calibrate");
   await sleep(2300); face.blinkL = face.blinkR = 0.9; await sleep(300); face.blinkL = face.blinkR = 0.08;
   await sleep(900); face.smile = 0.8; await sleep(400); face.smile = 0.03;
+  await until(() => owl.scene === "Ladder"); owl.press("stare");
   await until(() => owl.scene === "Match");
   await until(() => owl.scene === "Result");
   results.push(owl.result);
