@@ -11,3 +11,5 @@ test/fixtures/frames/
 *.y4m
 report/
 REPORT.md
+itch/
+dist/

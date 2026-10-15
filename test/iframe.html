@@ -1,11 +1,13 @@
 <!doctype html><meta charset="utf-8"><title>itch embed test</title>
-<!-- Mimics itch.io: the game runs in a cross-origin iframe. ?noallow drops allow="camera" to check the friendly error. -->
+<!-- Mimics itch.io: the game runs in a cross-origin iframe. ?noallow drops allow="camera" to check the friendly error.
+     ?src=index.html embeds that page instead of the spike. -->
 <style>body{margin:0;background:#222}iframe{border:0;width:100vw;height:100vh}</style>
 <body>
 <script>
   const f = document.createElement("iframe");
   if (!location.search.includes("noallow")) f.allow = "autoplay; fullscreen *; camera; microphone; gamepad";
-  f.src = `http://127.0.0.1:${location.port}/spike.html?auto`;   // other origin than localhost
+  const src = new URLSearchParams(location.search).get("src") ?? "spike.html?auto";
+  f.src = `http://127.0.0.1:${location.port}/${src}`;   // other origin than localhost
   document.body.append(f);
   addEventListener("message", (e) => (window.state = { origin: e.origin, ...e.data.spike }));
 </script>
