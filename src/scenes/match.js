@@ -39,7 +39,10 @@ export class Match extends Phaser.Scene {
     this.tweens.add({ targets: this.big, scale, duration: 300, ease: "Back.out" });
   }
   begin() {
-    this.pop("STARE!");
+    // STARE! sits above the owl's eyes (between the timer bar and the top of the face), shrunk to fit if needed
+    const barBottom = this.barBox.y + this.barBox.h * 1.6, faceTop = this.owl.y - this.owl.displayHeight * 0.25;
+    this.big.setText("STARE!").setScale(1).setY((barBottom + faceTop) / 2);
+    this.pop("STARE!", Math.min(1, (faceTop - barBottom) / this.big.height));
     sfx.stare();
     this.tweens.add({ targets: this.big, alpha: 0, delay: 600, duration: 300 });
     this.owl.setTexture("owl-stare");

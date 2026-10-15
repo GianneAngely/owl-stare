@@ -32,7 +32,11 @@ export class Result extends Phaser.Scene {
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 7))).setWordWrapWidth(cw * 0.9).setPosition(w / 2, cy + ch * 0.68);
     this.line.setFontSize(Math.round(Math.max(20 * D, u * 4.2))).setWordWrapWidth(cw * 0.85).setPosition(w / 2, cy + ch * 0.85);
     const s = Math.max(0.9 * D, u / 7.5), by = cy + ch + (h - cy - ch) * 0.4;
-    if (portrait) { this.again.setScale(s).setPosition(w / 2, cy + ch + u * 14); this.next.setScale(s * 0.8).setPosition(w / 2, cy + ch + u * 30); }
+    if (portrait) {   // stacked right under the card, spaced by their real heights
+      this.again.setScale(s); this.next.setScale(s * 0.8);
+      const gap = u * 3, a = this.again.height * s, n = this.next.height * s * 0.8;
+      this.again.setPosition(w / 2, cy + ch + gap * 1.5 + a / 2); this.next.setPosition(w / 2, this.again.y + a / 2 + gap + n / 2);
+    }
     else {
       this.again.setScale(s); this.next.setScale(s);
       const gap = u * 3, a = this.again.width * s, n = this.next.width * s, left = w / 2 - (a + gap + n) / 2;
