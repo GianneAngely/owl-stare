@@ -40,13 +40,17 @@ export class Result extends Phaser.Scene {
   recalibrate() { save({ th: null }); this.scene.start("Calibrate"); }
   layout(w, h) {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1;
-    const cw = Math.min(w * 0.88, 680 * D), ch = Math.min(h * (portrait ? 0.66 : 0.7), cw * 1.1), cx = (w - cw) / 2, cy = h * 0.06;
+    // portrait: start below the sound toggle (top right, ~62 css px); landscape: leave room under the card for buttons and links
+    const s = Math.max(0.9 * D, u / 7.5), fs = Math.round(Math.max(18 * D, u * 3.2)), ly = h - Math.max(30 * D, u * 6);
+    const cw = Math.min(w * 0.88, 680 * D), cx = (w - cw) / 2, cy = portrait ? Math.max(h * 0.06, 66 * D) : h * 0.06;
+    const buttons = portrait ? 34 * 1.7 * s * 1.8 + u * 7.5 : 34 * 1.7 * s + u * 4;   // stacked pair or one row, plus gaps
+    const ch = Math.min(h * (portrait ? 0.66 : 0.7), cw * 1.1, ly - fs - buttons - cy);
     this.card.clear().fillStyle(hex(BELLY)).fillRoundedRect(cx, cy, cw, ch, 28).lineStyle(Math.max(3 * D, u * 0.7), hex(INK)).strokeRoundedRect(cx, cy, cw, ch, 28);
     const oh = ch * 0.5 * (this.owls.length > 1 ? 0.85 : 1);
     this.owls.forEach((o, i) => o.place(w / 2 + (i - (this.owls.length - 1) / 2) * oh * 0.9, cy + ch * 0.32, oh));
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 7))).setWordWrapWidth(cw * 0.9).setPosition(w / 2, cy + ch * 0.68);
     this.line.setFontSize(Math.round(Math.max(20 * D, u * 4.2))).setWordWrapWidth(cw * 0.85).setPosition(w / 2, cy + ch * 0.85);
-    const s = Math.max(0.9 * D, u / 7.5), by = cy + ch + (h - cy - ch) * 0.4;
+    const by = (cy + ch + ly - fs) / 2;
     if (portrait) {   // stacked right under the card, spaced by their real heights
       this.again.setScale(s); this.next.setScale(s * 0.8);
       const gap = u * 3, a = this.again.height * s, n = this.next.height * s * 0.8;
@@ -61,7 +65,6 @@ export class Result extends Phaser.Scene {
     this.save.setScale(ss).setPosition(cx + pad + this.save.width * ss / 2, cy + pad + this.save.height * ss / 2);
     this.share.setScale(ss).setPosition(cx + cw - pad - this.share.width * ss / 2, this.save.y);
     this.toast.setFontSize(Math.round(Math.max(18 * D, u * 3.2))).setPosition(w / 2, cy + ch * 0.06);
-    const ly = h - Math.max(30 * D, u * 6), fs = Math.round(Math.max(18 * D, u * 3.2));
     this.links.forEach((l, i) => l.setFontSize(fs).setPosition(w / 2 + (this.links.length > 1 ? (i ? 1 : -1) * u * 12 : 0), ly));
   }
 }

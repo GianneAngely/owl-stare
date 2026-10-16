@@ -16,6 +16,9 @@ export async function startCamera(video) {
   await openCamera(video);
 }
 
+// phones pause the camera video when the tab or app goes to the background; start it again on return
+document.addEventListener("visibilitychange", () => { if (!document.hidden && face.video?.srcObject && face.video.paused) face.video.play().catch(() => {}); });
+
 // step 2: load the model and start emitting signals
 export async function startTracking() {
   if (face.ready) return;
