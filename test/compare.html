@@ -1,16 +1,15 @@
 <!doctype html><meta charset="utf-8"><title>owls vs lineup</title>
-<!-- Each game owl (right) next to the same owl cropped from concept/lineup.jpg (left), same height.
+<!-- Each game owl sprite (right) next to the same owl cropped from concept/lineup.jpg (left), same height.
      node tools/check.mjs test/compare.html 1600x1000 2500 report/owls/compare.png -->
 <style>body{margin:0;background:#f7f3e8}canvas{display:block}</style>
 <link rel="stylesheet" href="../assets/fonts/gaegu.css">
 <canvas id="c"></canvas>
 <script type="module">
-import { owlSVG, dataURL } from "../src/art/owl.js";
 import { byId } from "../src/owls/index.js";
 // crop box in lineup.jpg, and the face the owl wears in the lineup
-const ROWS = [["hoot", [45, 460, 145, 562], "dots"], ["plume", [140, 415, 255, 562], "specs"], ["twitchy", [255, 390, 395, 560], "wide"],
-  ["boomer", [400, 375, 580, 560], "shout"], ["grandma", [555, 360, 725, 560], "sweet"], ["dj", [700, 300, 860, 560], "idle"],
-  ["twins", [850, 340, 1100, 560], "idle"], ["boss", [1085, 215, 1340, 560], "sleepy"]];
+const ROWS = [["hoot", [45, 460, 145, 562], "rest"], ["plume", [140, 415, 255, 562], "rest"], ["twitchy", [255, 390, 395, 560], "rest"],
+  ["boomer", [400, 375, 580, 560], "shout"], ["grandma", [555, 360, 725, 560], "rest"], ["dj", [700, 300, 860, 560], "rest"],
+  ["twins", [850, 340, 1100, 560], "rest"], ["boss", [1085, 215, 1340, 560], "rest"]];
 const img = (src) => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.src = src; });
 const H = 300, lineup = await img("../concept/lineup.jpg"), c = document.getElementById("c"), g = c.getContext("2d");
 c.width = 1600; c.height = 4 * (H + 50);
@@ -20,8 +19,8 @@ for (const [i, [id, [x0, y0, x1, y1], face]] of ROWS.entries()) {
   const col = i % 2, row = Math.floor(i / 2), ox = col * 800 + 20, oy = row * (H + 50) + 30;
   const w = (x1 - x0) * H / (y1 - y0);
   g.drawImage(lineup, x0, y0, x1 - x0, y1 - y0, ox, oy, w, H);
-  const o = byId(id), owl = await img(dataURL(owlSVG(face, o.look))), n = o.twins ? 2 : 1, ow = H * 400 / 440;
-  for (let k = 0; k < n; k++) g.drawImage(owl, ox + 380 + k * ow * 0.8, oy, ow, H);
+  const o = byId(id), owl = await img(`../assets/owls/${id}-${face}.webp`), n = o.twins ? 2 : 1, ow = H * owl.width / owl.height;
+  for (let k = 0; k < n; k++) g.drawImage(owl, ox + 380 + k * ow * 0.95, oy, ow, H);
   g.fillStyle = "#1f1b18"; g.font = "700 22px Gaegu"; g.fillText(`${o.name}: lineup  |  game (${face})`, ox, oy - 8);
 }
 window.done = true;

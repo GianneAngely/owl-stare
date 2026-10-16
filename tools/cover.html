@@ -16,12 +16,11 @@
 <div id="owls"></div>
 <p>Don't blink. Don't laugh. Don't look away.</p>
 <script type="module">
-  import { owlSVG, dataURL } from "../src/art/owl.js";
   import { OWLS } from "../src/owls/index.js";
   // the boss big in the middle, the others in two rows behind it
   const spots = [[55, 40, 115], [160, 20, 110], [425, 20, 110], [505, 40, 110], [15, 150, 125], [120, 140, 130], [405, 140, 130], [495, 150, 125]];
   const box = document.getElementById("owls");
-  const add = (o, face, x, y, h) => box.append(Object.assign(new Image(), { src: dataURL(owlSVG(face, o.look)), style: `left:${x}px;top:${y}px;height:${h}px` }));
-  OWLS.filter((o) => o.id !== "boss").concat(OWLS.find((o) => o.id === "twins")).forEach((o, i) => add(o, o.rest, ...spots[i]));
-  add(OWLS.find((o) => o.id === "boss"), "sleepy", 206, 40, 240);
+  const add = (o, face, x, y, h) => box.append(Object.assign(new Image(), { src: `../assets/owls/${o.id}-${face}.webp`, style: `left:${x}px;top:${y}px;height:${h}px` }));
+  OWLS.filter((o) => o.id !== "boss").concat(OWLS.find((o) => o.id === "twins")).forEach((o, i) => add(o, "rest", ...spots[i]));
+  add(OWLS.find((o) => o.id === "boss"), "rest", 206, 40, 240);
 </script>

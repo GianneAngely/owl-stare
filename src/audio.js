@@ -3,10 +3,12 @@ import { load } from "./store.js";
 let ctx = null, master = null;
 export function unlock() {
   ctx ??= new (window.AudioContext || window.webkitAudioContext)();
-  if (!master) { master = ctx.createGain(); master.gain.value = load().muted ? 0 : 0.5; master.connect(ctx.destination); }
+  if (!master) { master = ctx.createGain(); master.gain.value = silent() ? 0 : 0.5; master.connect(ctx.destination); }
   if (ctx.state === "suspended") ctx.resume();
 }
-export const setMuted = (m) => master && (master.gain.value = m ? 0 : 0.5);
+// ?mute and the ?fake test mode are always silent; otherwise the player's sound toggle decides
+const silent = () => load().muted || /[?&](mute|fake)\b/.test(location.search);
+export const setMuted = (m) => master && (master.gain.value = m || silent() ? 0 : 0.5);
 
 function tone(freq, dur, { type = "sine", vol = 0.3, at = 0, slide = 0, attack = 0.005 } = {}) {
   if (!ctx) return;

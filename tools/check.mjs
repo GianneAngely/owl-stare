@@ -1,4 +1,4 @@
-// Real-time headless check over the DevTools protocol, with Chrome's fake camera.
+// Real-time headless check over the DevTools protocol, with Chrome's fake camera. Always muted (Angel, 17 Oct: no test may make sound).
 // node tools/check.mjs <path?query> <width>x<height> <waitMs> <out.png> [js expression | @file.js] [--cam=clip.y4m] [--deny] [--mobile]
 //   [--drive=@script.js]  runs in the page right after load (not awaited), e.g. to press buttons and fake a face over time
 //   [--shots=1500:title,4000:calib]  extra screenshots at those ms after load, saved next to out.png as <name>.png
@@ -23,7 +23,7 @@ const url = `http://localhost:${httpPort}/${path}`;
 const port = 9300 + Math.floor(Math.random() * 500);
 const cam = flag("cam");
 const chrome = spawn("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", [
-  "--headless=new", "--hide-scrollbars", ...(flag("frame") ? ["--disable-site-isolation-trials"] : []), "--autoplay-policy=no-user-gesture-required", "--use-fake-device-for-media-stream",
+  "--headless=new", "--hide-scrollbars", "--mute-audio", ...(flag("frame") ? ["--disable-site-isolation-trials"] : []), "--autoplay-policy=no-user-gesture-required", "--use-fake-device-for-media-stream",
   ...(flag("deny") ? [] : ["--use-fake-ui-for-media-stream"]), ...(typeof cam === "string" ? [`--use-file-for-fake-video-capture=${resolve(cam)}`] : []),
   `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), "owl-"))}`, `--window-size=${width},${height}`, "about:blank",
 ], { stdio: "ignore" });

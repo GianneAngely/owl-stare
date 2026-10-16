@@ -114,10 +114,10 @@ export class Match extends Phaser.Scene {
     this.clock.setDisplaySize(bh * 2.6, bh * 2.7).setPosition(this.barBox.x - bh * 0.6, this.barBox.y + bh / 2);
     this.name.setFontSize(Math.round(Math.max(22 * D, u * 4.4))).setPosition(w / 2, this.barBox.y - bh * 0.9);
     const n = this.owls.length, size = this.owlData.size;
-    // the biggest owl stays inside the frame: height capped by the space under the bar and by the width per owl
-    const room = portrait ? Math.min(h * 0.5, (w * 0.95) / n * 1.1) : Math.min(h * 0.62, (w * 0.8) / n * 1.1);
+    // the biggest owl stays inside the frame: height capped by the space under the bar, width by the room per owl
+    const room = portrait ? h * 0.5 : h * 0.62, maxW = (w * (portrait ? 0.92 : 0.8)) / n;
     const oh = room * Math.min(1, size + 0.1), y = h * (portrait ? 0.45 : 0.53) + (room - oh) * 0.4;
-    this.owls.forEach((o, i) => o.place(w / 2 + (i - (n - 1) / 2) * oh * 0.95, y, oh));
+    this.owls.forEach((o, i) => o.place(w / 2 + (i - (n - 1) / 2) * maxW, y, oh, maxW * 0.95));
     this.bigSize = Math.max(80 * D, u * 22);
     this.big.setFontSize(Math.round(this.bigSize)).setPosition(w / 2, h * (portrait ? 0.45 : 0.5)).setStroke(BELLY, this.bigSize * 0.12);
     this.hint.setFontSize(Math.round(Math.max(18 * D, u * 3.6))).setWordWrapWidth(w * (portrait ? 0.9 : 0.5)).setPosition(portrait ? w / 2 : w * 0.4, h * (portrait ? 0.79 : 0.92));

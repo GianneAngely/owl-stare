@@ -1,12 +1,13 @@
 <!doctype html><meta charset="utf-8"><title>art sheet</title>
-<!-- Every doodle texture side by side, for eyeballing the placeholder art. -->
+<!-- Every owl sprite and doodle prop side by side, for eyeballing the art. -->
 <style>body{margin:0;padding:12px;background:#f7f3e8;display:flex;flex-wrap:wrap;gap:8px;font:16px Gaegu,sans-serif}figure{margin:0;text-align:center}img{height:200px}</style>
 <link rel="stylesheet" href="../assets/fonts/gaegu.css">
 <script type="module">
 import * as art from "../src/art/owl.js";
 const add = (name, s) => document.body.insertAdjacentHTML("beforeend", `<figure><img src="${art.dataURL(s)}"><figcaption>${name}</figcaption></figure>`);
 import { OWLS } from "../src/owls/index.js";
-OWLS.forEach((o) => add(o.id, art.owlSVG(o.rest, o.look)));
-art.OWL_FACES.forEach((f) => add(f, art.owlSVG(f)));
+const POSES = ["rest", "blink", "laugh", "shock", "tongue", "cross", "shout"];   // as in src/art/owl-sprite.js (needs Phaser, so not imported)
+const sprite = (name, src) => document.body.insertAdjacentHTML("beforeend", `<figure><img src="${src}" onerror="this.parentNode.remove()"><figcaption>${name}</figcaption></figure>`);
+OWLS.forEach((o) => POSES.forEach((p) => sprite(`${o.id} ${p}`, `../assets/owls/${o.id}-${p}.webp`)));
 add("feather", art.featherSVG()); add("fly", art.flySVG()); add("duck", art.duckSVG()); add("note", art.noteSVG()); add("yarn", art.yarnSVG()); add("clock", art.clockSVG()); add("zap", art.zapSVG()); add("bang", art.bangSVG());
 </script>

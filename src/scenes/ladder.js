@@ -23,7 +23,7 @@ export class Ladder extends Phaser.Scene {
     this.branches = this.add.graphics();
     this.marks = this.add.graphics().setDepth(2);
     this.owls = OWLS.map((o, i) => {
-      const s = new OwlSprite(this, o.id, this.done[i] && i !== this.pick ? "shock" : o.rest).setSilhouette(!this.open[i]);
+      const s = new OwlSprite(this, o.id, this.done[i] && i !== this.pick ? "shock" : "rest").setSilhouette(!this.open[i]);
       s.setInteractive({ useHandCursor: this.open[i] }).on("pointerup", () => this.select(i));
       window.owl.buttons[`owl-${o.id}`] = () => this.select(i);
       return s;
@@ -36,12 +36,12 @@ export class Ladder extends Phaser.Scene {
   }
   select(i) {
     if (!this.open[i]) return;
-    this.owls[this.pick].setFace(this.done[this.pick] ? "shock" : OWLS[this.pick].rest ?? "stare");
+    this.owls[this.pick].setFace(this.done[this.pick] ? "shock" : "rest");
     this.tweens.killTweensOf(this.owls[this.pick]);
     this.owls[this.pick].setY(this.owls[this.pick].home.y);
     this.pick = i;
     const o = OWLS[i];
-    this.owls[i].setFace(o.rest);   // the picked owl hops, in its own lineup face
+    this.owls[i].setFace("rest");   // the picked owl hops, in its lineup pose
     this.tweens.add({ targets: this.owls[i], y: this.owls[i].home.y - this.owls[i].displayHeight * 0.06, duration: 420, yoyo: true, repeat: -1, ease: "Sine.inOut" });
     this.name.setText(`${i + 1}. ${o.name}`);
     this.info.setText(`${o.who} · ${o.seconds} s${this.done[i] ? " · beaten ★" : ""}\n“${o.line}”`);

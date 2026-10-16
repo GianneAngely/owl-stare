@@ -5,32 +5,40 @@ of one owl are cropped to the same box (the union of their content) so swapping 
 tall and saved as assets/owls/<owl>-<pose>.webp. Prints sizes and the total."""
 import sys
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFilter
+import numpy as np
+from PIL import Image, ImageFilter
+from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW, OUT = ROOT / "concept/flow-owls/raw", ROOT / "assets/owls"
-HEIGHT, QUALITY, TOL = 640, 78, 28
+HEIGHT, QUALITY = 640, 78
 
 
-def cut(path):
+def cut(path, fluffy=False):
     im = Image.open(path).convert("RGB")
-    # flood the background from every edge pixel that looks like paper; the ink outline stops the fill
-    mask = Image.new("L", im.size, 0)
-    work = im.copy()
-    w, h = im.size
-    seeds = [(x, y) for x in range(0, w, 8) for y in (0, h - 1)] + [(x, y) for y in range(0, h, 8) for x in (0, w - 1)]
-    MARK = (255, 0, 255)
-    for s in seeds:
-        if work.getpixel(s) != MARK and min(work.getpixel(s)) > 200:
-            ImageDraw.floodfill(work, s, MARK, thresh=TOL)
-    px, mp = work.load(), mask.load()
-    for y in range(h):
-        for x in range(w):
-            if px[x, y] != MARK:
-                mp[x, y] = 255
-    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))   # trim the paper halo, soften the edge
+    a = np.asarray(im).astype(np.float32)
+    lum = a.mean(axis=2)
+    sat = (a.max(axis=2) - a.min(axis=2)) / 255
+    paper = (lum > 196) & (sat < 0.12)                     # off-white paper, its texture and faint grey shadows
+    ink = ndimage.binary_dilation(lum < 110, iterations=5)  # thick outlines, grown to seal gaps between fluff strokes
+    # background = paper reachable from the image edge without crossing the sealed outline...
+    labels, _ = ndimage.label(paper & ~ink)
+    edge = set(np.unique(np.concatenate([labels[0], labels[-1], labels[:, 0], labels[:, -1]]))) - {0}
+    bg = np.isin(labels, list(edge))
+    # ...then the paper halo under the grown outline, and loose paper flecks that touch the background
+    for _ in range(8):
+        bg |= ndimage.binary_dilation(bg) & paper
+    fg = ~bg
+    if fluffy:   # Hoot: the fluff never closes and the body is paper-white, so fill the body inside the fluff instead
+        solid = ~paper
+        fg = ndimage.binary_fill_holes(ndimage.binary_closing(solid, iterations=14)) | solid
+    # drop tiny islands (dust) but keep drops, shake lines and other small ink bits of a few hundred px
+    lab, n = ndimage.label(fg)
+    sizes = ndimage.sum(fg, lab, range(1, n + 1))
+    fg &= np.isin(lab, np.nonzero(sizes >= 60)[0] + 1)
+    alpha = Image.fromarray((fg * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.8))
     out = im.convert("RGBA")
-    out.putalpha(mask)
+    out.putalpha(alpha)
     return out
 
 
@@ -40,7 +48,7 @@ def main(owls):
     owls = owls or sorted({f.stem.split("-")[0] for f in files})
     total = 0
     for owl in owls:
-        poses = {f.stem.split("-", 1)[1]: cut(f) for f in files if f.stem.split("-")[0] == owl}
+        poses = {f.stem.split("-", 1)[1]: cut(f, owl == "hoot") for f in files if f.stem.split("-")[0] == owl}
         if not poses:
             print(f"{owl}: no raw files"); continue
         boxes = [p.getchannel("A").getbbox() for p in poses.values()]
