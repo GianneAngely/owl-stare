@@ -1,7 +1,7 @@
 # Owl sprites from Google Flow: pose list and prompts
 
 Angel (via the manager, 16 Oct): the owls may be made in Google Flow so they match the GDD art exactly.
-Flow: Google account /u/2, project "Oct 13 - 02:21", model Nano Banana. Raw downloads go in this folder,
+Flow: Google account /u/2, project "Oct 13 - 02:21", model Nano Banana. Raw downloads go in `raw/` here,
 finished sprites in `assets/owls/` (transparent WebP, about 640 px tall, budget about 2.2 MB in total so the itch zip stays under 10 MB).
 
 ## Poses the game needs
@@ -29,6 +29,32 @@ Every face the code swaps in maps to one full-body image per owl. "idle" and "st
 | 8 | Great Horned Hootington, big white, yellow crown | rest, blink, laugh, shock, tongue, cross, shout | 7 |
 | – | Guide owl from keyart.jpg (title, camera, calibration) | rest, blink, laugh, shock | 4 |
 | | | **Total** | **57** |
+
+## File names
+Owl ids: `guide`, `hoot`, `plume`, `twitchy`, `boomer`, `grandma`, `dj`, `twins`, `boss`. Pose ids: `rest`, `blink`, `laugh`, `shock`, `tongue`, `cross`, `shout`.
+
+| Stage | Path | Example |
+|---|---|---|
+| Flow download, renamed | `concept/flow-owls/raw/<owl>-<pose>.png` | `concept/flow-owls/raw/plume-tongue.png` |
+| Finished sprite (transparent, trimmed) | `assets/owls/<owl>-<pose>.webp` | `assets/owls/plume-tongue.webp` |
+| Phaser texture key | `owl-<owl>-<pose>` | `owl-plume-tongue` |
+
+Every face name in the code maps to a pose file:
+
+| Face in code | Pose file |
+|---|---|
+| `idle`, `stare`, `dots`, `specs`, `wide`, `sweet`, `sleepy` (rest faces) | `rest` |
+| `blink` | `blink` |
+| `laugh` | `laugh` |
+| `shock` | `shock` |
+| `tongue` | `tongue` |
+| `cross` | `cross` |
+| `shout` | `shout` (only boomer, grandma, dj, twins, boss use it) |
+
+The full list of 57 files: `guide-{rest,blink,laugh,shock}`, `{hoot,plume,twitchy}-{rest,blink,laugh,shock,tongue,cross}`,
+`{boomer,grandma,dj,twins,boss}-{rest,blink,laugh,shock,tongue,cross,shout}`.
+
+The code-drawn SVG owls stay on branch `owls-svg` (commit 65db5aa) as a backup.
 
 ## How (one owl at a time)
 1. **rest:** ingredient `concept/lineup.jpg` (+ Search assets, Add to prompt), rest prompt below. Generate, pick the closest one, download.
