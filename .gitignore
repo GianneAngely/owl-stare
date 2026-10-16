@@ -11,6 +11,6 @@ test/fixtures/frames/
 *.y4m
 report/
 REPORT.md
-itch/
+itch/*.zip
 dist/
 concept/flow-owls/raw/
