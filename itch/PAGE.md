@@ -42,7 +42,7 @@ Beat an owl to unlock the next one. Your progress is saved in your browser. Afte
 
 ## Phones and browsers
 - Needs a camera that faces you and permission to use it. If you said no by accident, allow the camera in your browser settings and press "Try again".
-- Works in recent Chrome, Edge, Firefox and Safari, on desktop and phone (iPhone: iOS 16.4 or later). Very old browsers without WebAssembly SIMD get a friendly message instead.
+- Tested in Chrome on desktop; made for recent Chrome, Edge, Firefox and Safari on desktop and phone (iPhone: iOS 16.4 or later). Very old browsers without WebAssembly SIMD get a friendly message instead.
 - Play in good light, facing the camera. If blinks or smiles are not caught (for example with glasses), press "recalibrate" on the result screen.
 - First load downloads about 9 MB, including the face-tracking model.
 
