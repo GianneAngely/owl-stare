@@ -1,6 +1,6 @@
 """Flow downloads -> game sprites.
 python3 tools/cut-owls.py [owl ...]   (default: every owl found in concept/flow-owls/raw/)
-For each raw/<owl>-<pose>.png: the off-white background connected to the edges becomes transparent, then all poses
+For each aligned/<owl>-<pose>.png (tools/align-owls.py): the off-white background connected to the edges becomes transparent, then all poses
 of one owl are cropped to the same box (the union of their content) so swapping poses doesn't jump, scaled to 640 px
 tall and saved as assets/owls/<owl>-<pose>.webp. Prints sizes and the total."""
 import sys
@@ -10,7 +10,7 @@ from PIL import Image, ImageFilter
 from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW, OUT = ROOT / "concept/flow-owls/raw", ROOT / "assets/owls"
+RAW, OUT = ROOT / "concept/flow-owls/aligned", ROOT / "assets/owls"   # aligned/: made by tools/align-owls.py from raw/
 HEIGHT, QUALITY = 640, 78
 
 
