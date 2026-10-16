@@ -28,7 +28,7 @@
     owl.press(`owl-${id}`); await sleep(300);
     if (id === "boss" || id === "grandma") await shot(`o-${id}-ladder`);
     owl.press("stare");
-    await until(() => owl.log.at(-1)[1] === "stare"); await sleep(700);
+    await until(() => owl.log.at(-1)[1] === "stare"); await sleep(700); await shot(`o-${id}-stare`);
     for (const t of tricks[id]) {
       owl.trick(t, id === "twins" && t === "hoot" ? 1 : 0);
       await sleep(t === "joke" ? 900 : t === "fly" ? 1500 : t === "dance" ? 650 : 350);

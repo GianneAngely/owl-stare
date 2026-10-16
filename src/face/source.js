@@ -1,18 +1,21 @@
 // The one face feed the game listens to: the real camera + FaceLandmarker, or (?fake) signals a test script sets on window.fakeFace.
-import { openCamera, loadLandmarker, track } from "./tracker.js";
+import { openCamera, loadLandmarker, track, simdSupported } from "./tracker.js";
 
 const listeners = new Set();
 export const face = { latest: null, ready: false, fake: new URLSearchParams(location.search).has("fake"), video: null };
 const emit = (s) => { face.latest = s; listeners.forEach((f) => f(s)); };
 export const onFace = (f) => (listeners.add(f), () => listeners.delete(f));
 
-// step 1: the browser permission prompt. Throws with e.kind = denied | nocamera | busy | unsupported | error
+// step 1: the browser permission prompt. Throws with e.kind = nosimd | denied | nocamera | busy | unsupported | error
 export async function startCamera(video) {
   face.video = video;
   if (face.fake) {
+    if (window.fakeFace?.nosimd) throw Object.assign(new Error("nosimd"), { kind: "nosimd" });
     if (window.fakeFace?.deny) throw Object.assign(new Error("denied"), { kind: "denied" });
     return;
   }
+  // checked before the camera prompt, so nobody allows the camera for a game that can't run
+  if (!(await simdSupported())) throw Object.assign(new Error("no wasm simd"), { kind: "nosimd" });
   await openCamera(video);
 }
 

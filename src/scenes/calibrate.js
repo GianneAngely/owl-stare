@@ -15,7 +15,7 @@ export class Calibrate extends Phaser.Scene {
     enter(this);
     paper(this);
     this.tries = 0;
-    this.owl = new OwlSprite(this, "hoot", "idle");
+    this.owl = new OwlSprite(this, "guide", "idle");
     this.head = text(this, 0, 0, "Let's learn your face", 46);
     this.say = text(this, 0, 0, "", 34);
     this.dots = this.add.graphics();

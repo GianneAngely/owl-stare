@@ -11,6 +11,7 @@ const PROBLEM = {
   nocamera: ["No camera found", "Owl Stare needs a camera that faces you. Plug one in or open the game on a phone, then try again."],
   busy: ["Your camera is busy", "Another app is using the camera. Close it, then try again."],
   unsupported: ["Camera not available here", "This browser can't use the camera on this page. Try opening the game in a new tab or in Chrome, Safari or Firefox."],
+  nosimd: ["This browser can't run the owl", "Owl Stare needs a newer browser. Try the latest Chrome, Firefox or Safari, or update your phone (iPhone: iOS 16.4 or later)."],
   error: ["Something went wrong", "The camera or the owl brain didn't start. Try again, or reload the page."],
 };
 
@@ -19,7 +20,7 @@ export class CameraAsk extends Phaser.Scene {
   create() {
     enter(this);
     paper(this);
-    this.owl = new OwlSprite(this, "hoot", "idle");
+    this.owl = new OwlSprite(this, "guide", "idle");
     this.head = text(this, 0, 0, "The owl needs to see you", 50);
     this.body = text(this, 0, 0, WHY, 28, { bold: false });
     this.status = text(this, 0, 0, "", 28);
@@ -61,7 +62,7 @@ export class Denied extends Phaser.Scene {
     paper(this);
     this.kind = kind;
     const [head, body] = PROBLEM[kind] ?? PROBLEM.error;
-    this.owl = new OwlSprite(this, "hoot", "shock");
+    this.owl = new OwlSprite(this, "guide", "shock");
     this.head = text(this, 0, 0, head, 50);
     this.body = text(this, 0, 0, body, 28, { bold: false });
     this.retry = button(this, "retry", "Try again", 36, () => this.scene.start("CameraAsk"));

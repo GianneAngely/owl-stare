@@ -9,7 +9,7 @@ export class Title extends Phaser.Scene {
   create() {
     enter(this);
     paper(this);
-    this.owl = new OwlSprite(this, "hoot", "idle");
+    this.owl = new OwlSprite(this, "guide", "idle");
     this.title = text(this, 0, 0, "Owl Stare", 80);
     this.sub = text(this, 0, 0, "Don't blink. Don't laugh. Don't look away.", 28, { bold: false });
     this.play = button(this, "play", "Play", 40, () => {

@@ -111,3 +111,7 @@ Keputusan Angel 16 Okt: art tetap doodle SVG; Hoot 2 trik; itch hanya draft/rest
 | **M6 Mobile** | `MOBILE-TEST.md`: checklist untuk Angel (iPhone Safari + Android Chrome: izin kamera, fps, kedip, rotasi, suara setelah tap, layar terkunci/kembali); cek headless ukuran HP; kamera dilanjutkan saat tab kembali. Memori tekstur owl tidak dikurangi: di HP 2x owl memang tampil ±800 px tinggi, jadi tekstur 800x880 dibutuhkan; tunggu hasil HP asli | checklist dikirim ke Angel; screenshot HP kecil/besar/landscape |
 | **M7 itch build** | `tools/build-zip.sh` ulang, teks halaman itch (deskripsi, privasi kamera, kontrol), cover 630x500 + 3 screenshot | zip diuji di iframe lintas-origin dengan kamera palsu; lapor ke manager "siap upload" (draft/restricted saja) |
 | M8 Promo video | rekam frame (record-steady) owl + trik, tanpa wajah pemain | menunggu approval Angel |
+
+## 10. Art ulang mengikuti lineup (17 Okt 2026)
+Permintaan Angel lewat manager (16 Okt): owl harus sama dengan `concept/lineup.jpg`. Semua owl digambar ulang sebagai SVG di `src/art/owl.js`: garis brush tebal-tipis dengan sedikit putus (filter displacement), isi flat, piringan wajah pucat, tanda dada V, kaki gelap, sayap di dalam badan. Hoot = bayi fluffy. Wajah istirahat per owl (`rest`): dots, specs, wide, stare, sweet, idle, idle, sleepy. Layar title / kamera / kalibrasi pakai owl cream dari keyart (`GUIDE`). Pembanding: `test/compare.html`.
+Build itch: hanya wasm SIMD (zip ±7 MB, batas 10 MB). Browser tanpa SIMD dapat layar "This browser can't run the owl".

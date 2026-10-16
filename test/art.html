@@ -6,7 +6,7 @@
 import * as art from "../src/art/owl.js";
 const add = (name, s) => document.body.insertAdjacentHTML("beforeend", `<figure><img src="${art.dataURL(s)}"><figcaption>${name}</figcaption></figure>`);
 import { OWLS } from "../src/owls/index.js";
-OWLS.forEach((o) => add(o.id, art.owlSVG(o.rest ?? "stare", o.look)));
+OWLS.forEach((o) => add(o.id, art.owlSVG(o.rest, o.look)));
 art.OWL_FACES.forEach((f) => add(f, art.owlSVG(f)));
 add("feather", art.featherSVG()); add("fly", art.flySVG()); add("duck", art.duckSVG()); add("note", art.noteSVG()); add("yarn", art.yarnSVG()); add("clock", art.clockSVG()); add("zap", art.zapSVG()); add("bang", art.bangSVG());
 </script>

@@ -2,6 +2,9 @@
 import { FaceLandmarker, FilesetResolver } from "../../lib/mediapipe/vision_bundle.mjs";
 import { toSignals } from "./signals.js";
 
+// the itch build ships only the SIMD wasm (upload limit 10 MB): Chrome 91+, Firefox 89+, Safari / iOS 16.4+
+export const simdSupported = () => FilesetResolver.isSimdSupported();
+
 export async function openCamera(video) {
   if (!navigator.mediaDevices?.getUserMedia) throw Object.assign(new Error("no camera api"), { kind: "unsupported" });
   let stream;

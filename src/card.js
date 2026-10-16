@@ -3,8 +3,8 @@
 import { owlSVG, dataURL, INK, PAPER, BELLY, YELLOW } from "./art/owl.js";
 import { FONT } from "./ui.js";
 
-// the public itch page, once there is one (the draft page is not public, so nothing to link yet)
-export const PLAY_URL = "";
+// the itch page the share text and card point to
+export const PLAY_URL = "https://gianneangely.itch.io/owl-stare";   // from the manager, 16 Oct; Angel still to confirm
 const WHY = { blink: "I blinked", smile: "I smiled", away: "I looked away" };
 
 export function cardText(o, r, champion) {

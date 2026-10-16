@@ -1,5 +1,5 @@
 import { OWL_FACES, faceSVG, bodySVG, frontSVG, featherSVG, clockSVG, zapSVG, bangSVG, flySVG, duckSVG, noteSVG, yarnSVG, dataURL } from "../art/owl.js";
-import { OWLS } from "../owls/index.js";
+import { OWLS, GUIDE } from "../owls/index.js";
 import { FONT } from "../ui.js";
 
 export class Boot extends Phaser.Scene {
@@ -8,7 +8,7 @@ export class Boot extends Phaser.Scene {
     // rasterized at 2x the largest on-screen size so they stay crisp on phones
     const big = { width: 800, height: 880 };
     for (const f of OWL_FACES) this.load.svg(`face-${f}`, dataURL(faceSVG(f)), big);
-    for (const o of OWLS) {
+    for (const o of [...OWLS, GUIDE]) {
       this.load.svg(`body-${o.id}`, dataURL(bodySVG(o.look)), big);
       const front = frontSVG(o.look);
       if (front) this.load.svg(`front-${o.id}`, dataURL(front), big);
