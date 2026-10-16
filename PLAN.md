@@ -100,3 +100,14 @@ test/                  node --test (judge, calibrate) + fixtures wajah
 - Owl = 3 layer (body per owl, face bersama, front props) di `src/art/owl-sprite.js`: 8 body + 9 face + 5 front, bukan 72 gambar utuh.
 - Trik baru: joke, fly, hoot, squeak, popup, knit, surprise, dance. Twins = 2 owl dengan jadwal trik sendiri-sendiri; boss `overlap` (trik berikutnya tidak menunggu). Trik kembali ke `owl.home`, jadi trik yang tumpang-tindih tidak menggeser owl.
 - Ladder: owl terkunci = siluet tinta; terbuka bila owl sebelumnya dikalahkan (`localStorage owlstare.v1.beaten`).
+
+## 9. Sisa milestone (update 16 Okt 2026)
+Keputusan Angel 16 Okt: art tetap doodle SVG; Hoot 2 trik; itch hanya draft/restricted (upload oleh sesi itch staff, saya siapkan build); playtest laptop: semua kedipan tertangkap.
+
+| # | Isi | Verifikasi |
+|---|---|---|
+| **M4 Result card** | Save (PNG digambar ulang dari owl + teks, **tanpa wajah/kamera**) dan Share (Web Share API dengan file bila didukung, kalau tidak: salin teks + link) | PNG tersimpan headless, dicek isinya bukan frame kamera; tombol tidak menimpa di 6 ukuran layar; `npm test` |
+| **M5 Polish** | tombol mute (diingat), tick tegang makin cepat di 3 dtk terakhir, progress bar saat model dimuat, peringatan "can't see you" di kalibrasi bila wajah hilang/gelap | `?fake` loop penuh, screenshot tiap layar desktop + HP, nol error console |
+| **M6 Mobile** | `MOBILE-TEST.md`: checklist untuk Angel (iPhone Safari + Android Chrome: izin kamera, fps, kedip, rotasi, suara setelah tap, layar terkunci/kembali); cek headless ukuran HP; kurangi memori tekstur owl | checklist dikirim ke Angel; screenshot HP kecil/besar/landscape |
+| **M7 itch build** | `tools/build-zip.sh` ulang, teks halaman itch (deskripsi, privasi kamera, kontrol), cover 630x500 + 3 screenshot | zip diuji di iframe lintas-origin dengan kamera palsu; lapor ke manager "siap upload" (draft/restricted saja) |
+| M8 Promo video | rekam frame (record-steady) owl + trik, tanpa wajah pemain | menunggu approval Angel |
