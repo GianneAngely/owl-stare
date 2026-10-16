@@ -1,7 +1,7 @@
 // 5-second calibration (GDD §4): relax, blink, smile. Thresholds are saved so it runs once.
 import { OwlSprite } from "../art/owl-sprite.js";
 import { D, paper, text, button, enter, note, hook } from "../ui.js";
-import { onFace } from "../face/source.js";
+import { face, onFace } from "../face/source.js";
 import { calibrate } from "../face/calibrate.js";
 import { save } from "../store.js";
 
@@ -20,6 +20,7 @@ export class Calibrate extends Phaser.Scene {
     this.say = text(this, 0, 0, "", 34);
     this.dots = this.add.graphics();
     this.go = button(this, "calibrate", "Ready", 36, () => this.run());
+    this.lost = text(this, 0, 0, "I can't see you. Face the camera in good light.", 34).setVisible(false);
     this.layout(this.scale.width, this.scale.height);
   }
   async run() {
@@ -48,6 +49,8 @@ export class Calibrate extends Phaser.Scene {
     this.say.setText("Got it! Now… stare.");
     this.time.delayedCall(900, () => this.scene.start("Ladder"));
   }
+  // shown where the step text goes, in its place while the face is missing
+  update() { const lost = this.go.visible && face.latest?.face === false; this.lost.setVisible(lost); this.say.setVisible(!lost); }
   collect(ms) {
     const samples = [];
     const off = onFace((s) => samples.push(s));
@@ -65,6 +68,7 @@ export class Calibrate extends Phaser.Scene {
     this.owl.setDisplaySize(oh * 400 / 440, oh).setPosition(w / 2, h * (portrait ? 0.38 : 0.42));
     this.say.setFontSize(Math.round(Math.max(24 * D, u * 5))).setWordWrapWidth(Math.min(w * 0.85, 760 * D)).setPosition(w / 2, h * (portrait ? 0.66 : 0.73));
     this.go.setScale(Math.max(0.9 * D, u / 7)).setPosition(w / 2, h * 0.84);
+    this.lost.setFontSize(this.say.style.fontSize).setWordWrapWidth(this.say.style.wordWrapWidth).setPosition(this.say.x, this.say.y);
     if (this.step != null) this.drawDots();
   }
 }

@@ -31,8 +31,12 @@ export class CameraAsk extends Phaser.Scene {
     this.status.setText("Waiting for your OK…");
     try {
       await startCamera(document.getElementById("me-video"));
-      this.status.setText("Waking up the owl…");
+      let n = 0;
+      const dots = this.time.addEvent({ delay: 400, loop: true, callback: () => this.status.setText(`Waking up the owl${".".repeat(++n % 4)}` +
+        (n > 15 ? "\nThe first time takes a little while." : "")) });
+      this.status.setText("Waking up the owl");
       await startTracking();
+      dots.remove();
     } catch (e) {
       note(`camera error ${e.kind ?? e.message}`);
       return this.scene.start("Denied", { kind: e.kind ?? "error" });

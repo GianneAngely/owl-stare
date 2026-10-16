@@ -74,9 +74,10 @@ export class Match extends Phaser.Scene {
   }
   update(_, dt) {
     if (this.state !== "stare") return;
-    const before = Math.floor(this.elapsed / 1000);
+    // tick every second, twice a second (and higher) in the last 3 s
+    const last = this.owlData.seconds * 1000 - this.elapsed < 3000, step = last ? 500 : 1000, before = Math.floor(this.elapsed / step);
     this.elapsed += dt;
-    if (Math.floor(this.elapsed / 1000) > before) sfx.tick(this.owlData.seconds * 1000 - this.elapsed < 3000);
+    if (Math.floor(this.elapsed / step) > before) sfx.tick(last);
     if (this.elapsed >= this.owlData.seconds * 1000) this.end(null);
     this.drawBar();
   }

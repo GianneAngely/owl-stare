@@ -19,12 +19,15 @@
   #me.off video { visibility: hidden; }
   #me.off::before { content: "you're hidden"; position: absolute; inset: 0; display: grid; place-items: center; box-sizing: border-box;
     border: 3px dashed var(--ink); border-radius: 16px; font: 700 16px "Gaegu", sans-serif; color: var(--ink); background: var(--belly); }
+  #mute { position: fixed; top: max(22px, 4vmin); right: max(22px, 4vmin); width: 40px; height: 40px; padding: 0; border-radius: 50%; cursor: pointer;
+    background: var(--belly); border: 3px solid var(--ink); font-size: 18px; line-height: 1; }
   #me-toggle { position: absolute; top: -12px; left: -12px; width: 34px; height: 34px; padding: 0; border-radius: 50%; cursor: pointer;
     background: var(--belly); border: 3px solid var(--ink); font: 700 15px "Gaegu", sans-serif; color: var(--ink); line-height: 1; }
 </style>
 </head>
 <body>
 <div id="game"></div>
+<button id="mute" aria-label="Sound on or off" title="Sound on / off">🔊</button>
 <div id="me" hidden>
   <video id="me-video" playsinline muted></video>
   <button id="me-toggle" aria-label="Hide or show my camera preview" title="Hide / show me">👁</button>

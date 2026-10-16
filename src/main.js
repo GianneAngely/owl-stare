@@ -7,6 +7,13 @@ import { Result } from "./scenes/result.js";
 import { Ladder } from "./scenes/ladder.js";
 
 import { D } from "./ui.js";
+import { setMuted } from "./audio.js";
+import { load, save } from "./store.js";
+
+const mute = document.getElementById("mute");
+const showMute = () => (mute.textContent = load().muted ? "🔇" : "🔊");
+showMute();
+mute.addEventListener("click", () => { const m = !load().muted; save({ muted: m }); setMuted(m); showMute(); });
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,

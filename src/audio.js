@@ -1,8 +1,9 @@
 // Every sound is synthesized with Web Audio; no audio files.
+import { load } from "./store.js";
 let ctx = null, master = null;
 export function unlock() {
   ctx ??= new (window.AudioContext || window.webkitAudioContext)();
-  if (!master) { master = ctx.createGain(); master.gain.value = 0.5; master.connect(ctx.destination); }
+  if (!master) { master = ctx.createGain(); master.gain.value = load().muted ? 0 : 0.5; master.connect(ctx.destination); }
   if (ctx.state === "suspended") ctx.resume();
 }
 export const setMuted = (m) => master && (master.gain.value = m ? 0 : 0.5);
