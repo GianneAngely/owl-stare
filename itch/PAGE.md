@@ -52,7 +52,6 @@ Other
 ## Tags (10)
 webcam, staring-contest, owls, funny, comedy, party-game, face-tracking, cute, hand-drawn, short
 
-## AI disclosure
+## AI disclosure (Angel, 18 Oct)
 - **Graphics: yes.** The owls are generated with Google Flow (Nano Banana Pro), based on Angel's own concept art.
-- Sound: no (all sounds are synthesized in code).
-- Text and code: **decision for Angel.** The code, the owl jokes and other in-game lines were written with an AI coding assistant. itch's AI disclosure asks about these too.
+- Sound: no. Text: no. Code: no.
