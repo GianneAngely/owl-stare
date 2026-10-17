@@ -2,6 +2,7 @@
 // node tools/check.mjs <path?query> <width>x<height> <waitMs> <out.png> [js expression | @file.js] [--cam=clip.y4m] [--deny] [--mobile]
 //   [--drive=@script.js]  runs in the page right after load (not awaited), e.g. to press buttons and fake a face over time
 //   [--shots=1500:title,4000:calib]  extra screenshots at those ms after load, saved next to out.png as <name>.png
+//   [--dpr=N]  device pixel ratio (default 2)
 //   [--root=dir]  serve that folder instead of the repo (e.g. the unzipped itch build)
 //   [--frame]  run --drive, --shotq and the eval inside the cross-origin iframe (http://127.0.0.1:...) instead of the top page
 //   [--shotq]  the page asks for screenshots itself: window.shotQueue.push("name") (polled every 100 ms); window.shotsTaken counts them
@@ -54,7 +55,7 @@ try {
   await send("Page.enable");
   if (flag("deny")) await send("Browser.setPermission", { permission: { name: "camera" }, setting: "denied" });
   const mobile = !!flag("mobile");
-  await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 2, mobile });
+  await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: Number(flag("dpr")) || 2, mobile });
   if (mobile) await send("Emulation.setTouchEmulationEnabled", { enabled: true });
   await send("Page.navigate", { url });
   const t0 = Date.now();

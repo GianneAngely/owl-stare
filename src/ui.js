@@ -3,8 +3,11 @@ import { INK, PAPER, YELLOW, BELLY } from "./art/owl.js";
 import { sfx } from "./audio.js";
 
 export const hex = (c) => parseInt(c.slice(1), 16);
-// game canvas runs in device pixels (crisp on phones); the camera zooms it back down, like Cake Tower
-export const D = Math.min(window.devicePixelRatio || 1, 2);
+// game canvas runs in device pixels and is zoomed back down, like Cake Tower. At least 2x even on 1x screens
+// (smoother text and lines), at most 3x (phones). Re-read on resize, because browser zoom changes the ratio (Angel, 18 Oct: "kurang HD").
+const ratio = () => Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
+export let D = ratio();
+export const refreshD = () => (D = ratio());
 export const FONT = '"Gaegu", "Comic Sans MS", sans-serif';
 
 // state the headless checks read and drive

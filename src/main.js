@@ -6,7 +6,7 @@ import { Match } from "./scenes/match.js";
 import { Result } from "./scenes/result.js";
 import { Ladder } from "./scenes/ladder.js";
 
-import { D } from "./ui.js";
+import { D, refreshD } from "./ui.js";
 import { setMuted } from "./audio.js";
 import { load, save } from "./store.js";
 
@@ -22,4 +22,4 @@ const game = new Phaser.Game({
   scale: { mode: Phaser.Scale.NONE, width: innerWidth * D, height: innerHeight * D, zoom: 1 / D },
   scene: [Boot, Title, CameraAsk, Denied, Calibrate, Ladder, Match, Result],
 });
-addEventListener("resize", () => game.scale.resize(innerWidth * D, innerHeight * D));
+addEventListener("resize", () => { refreshD(); game.scale.setZoom(1 / D); game.scale.resize(innerWidth * D, innerHeight * D); });

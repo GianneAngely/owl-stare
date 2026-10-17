@@ -12,6 +12,8 @@
     user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
   [hidden] { display: none !important; }
   #game { position: fixed; inset: 0; }
+  /* Phaser marks its canvas "pixelated"; any scaling (browser zoom, itch iframe) then looks jagged. Smooth it. */
+  #game canvas { image-rendering: auto !important; }
   /* self-view: small, mirrored, bottom right, like the concept screen */
   #me { position: fixed; right: max(16px, 3vmin); bottom: max(16px, 3vmin); width: clamp(110px, 20vmin, 200px); aspect-ratio: 4 / 3; }
   #me video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); box-sizing: border-box;

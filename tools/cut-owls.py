@@ -1,8 +1,8 @@
 """Flow downloads -> game sprites.
 python3 tools/cut-owls.py [owl ...]   (default: every owl found in concept/flow-owls/raw/)
 For each aligned/<owl>-<pose>.png (tools/align-owls.py): the off-white background connected to the edges becomes transparent, then all poses
-of one owl are cropped to the same box (the union of their content) so swapping poses doesn't jump, scaled to 640 px
-tall and saved as assets/owls/<owl>-<pose>.webp. Prints sizes and the total."""
+of one owl are cropped to the same box (the union of their content) so swapping poses doesn't jump, kept at full
+resolution and saved as assets/owls/<owl>-<pose>.webp. Prints sizes and the total."""
 import sys
 from pathlib import Path
 import numpy as np
@@ -11,7 +11,7 @@ from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW, OUT = ROOT / "concept/flow-owls/aligned", ROOT / "assets/owls"   # aligned/: made by tools/align-owls.py from raw/
-HEIGHT, QUALITY = 640, 78
+QUALITY = 80   # full Flow resolution (no downscale): ~730-880 px tall, about 1.7x the on-screen size
 
 
 def cut(path, fluffy=False):
@@ -55,7 +55,6 @@ def main(owls):
         box = (min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes))
         for pose, img in poses.items():
             c = img.crop(box)
-            c = c.resize((round(c.width * HEIGHT / c.height), HEIGHT), Image.LANCZOS)
             dest = OUT / f"{owl}-{pose}.webp"
             c.save(dest, "WEBP", quality=QUALITY, method=6)
             total += dest.stat().st_size
