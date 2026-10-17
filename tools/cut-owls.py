@@ -29,7 +29,7 @@ def cut(path, fluffy=False):
     for _ in range(8):
         bg |= ndimage.binary_dilation(bg) & paper
     fg = ~bg
-    if fluffy:   # Hoot: the fluff never closes and the body is paper-white, so fill the body inside the fluff instead
+    if fluffy:   # Hoot and the guide: paper-coloured bodies with gaps in the outline, so fill the body inside the outline instead
         solid = ~paper
         fg = ndimage.binary_fill_holes(ndimage.binary_closing(solid, iterations=14)) | solid
     # drop tiny islands (dust) but keep drops, shake lines and other small ink bits of a few hundred px
@@ -48,7 +48,7 @@ def main(owls):
     owls = owls or sorted({f.stem.split("-")[0] for f in files})
     total = 0
     for owl in owls:
-        poses = {f.stem.split("-", 1)[1]: cut(f, owl == "hoot") for f in files if f.stem.split("-")[0] == owl}
+        poses = {f.stem.split("-", 1)[1]: cut(f, owl in ("hoot", "guide")) for f in files if f.stem.split("-")[0] == owl}
         if not poses:
             print(f"{owl}: no raw files"); continue
         boxes = [p.getchannel("A").getbbox() for p in poses.values()]

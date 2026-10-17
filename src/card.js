@@ -23,8 +23,9 @@ function fitText(g, str, x, y, size, maxW, weight = 700) {
 
 export async function cardBlob(o, r, champion) {
   const W = 1080, H = 1080, c = document.createElement("canvas");
-  c.width = W; c.height = H;
+  c.width = W * 2; c.height = H * 2;   // drawn at 2x (2160 px) so text and lines stay sharp when zoomed
   const g = c.getContext("2d"), { head, line } = cardText(o, r, champion);
+  g.scale(2, 2);
   await document.fonts?.load(`700 64px ${FONT}`).catch(() => {});
   g.fillStyle = PAPER; g.fillRect(0, 0, W, H);
   g.strokeStyle = INK; g.lineWidth = 10; g.lineJoin = g.lineCap = "round";

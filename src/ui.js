@@ -48,11 +48,11 @@ export const text = (scene, x, y, str, size, opts = {}) =>
 // doodle button: yellow pill with an ink outline; id is what window.owl.press() calls
 export function button(scene, id, label, size, onPress, { color = YELLOW } = {}) {
   const c = scene.add.container(0, 0);
-  const t = text(scene, 0, -size * 0.06, label, size);
+  const t = text(scene, 0, -size * 0.06, label, size).setResolution(3);   // buttons are scaled up by layout: draw the text big enough
   const w = t.width + size * 1.6, h = size * 1.7;
   const g = scene.add.graphics();
   const draw = (down) => g.clear().fillStyle(hex(color)).fillRoundedRect(-w / 2, -h / 2 + (down ? 3 : 0), w, h, h * 0.4)
-    .lineStyle(Math.max(3 * D, size * 0.13), hex(INK)).strokeRoundedRect(-w / 2, -h / 2 + (down ? 3 : 0), w, h, h * 0.4);
+    .lineStyle(size * 0.16, hex(INK)).strokeRoundedRect(-w / 2, -h / 2 + (down ? 3 : 0), w, h, h * 0.4);
   draw(false);
   c.add([g, t]).setSize(w, h).setInteractive({ useHandCursor: true });
   let fired = false;

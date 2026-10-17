@@ -3,7 +3,7 @@
 // The faces the code asks for map to poses; anything else (idle, stare, sweet, ...) is the owl's lineup pose, "rest".
 import { byId } from "../owls/index.js";
 
-export const POSES = ["rest", "blink", "laugh", "shock", "tongue", "cross", "shout"];
+export const POSES = ["rest", "blink", "laugh", "shock", "tongue", "cross", "shout", "talk"];   // talk: the guide only
 const pose = (face) => (POSES.includes(face) ? face : "rest");
 export const poseKey = (art, face) => `owl-${art}-${pose(face)}`;
 

@@ -1,5 +1,5 @@
 import { featherSVG, clockSVG, zapSVG, bangSVG, flySVG, duckSVG, noteSVG, yarnSVG, dataURL } from "../art/owl.js";
-import { OWLS } from "../owls/index.js";
+import { OWLS, GUIDE } from "../owls/index.js";
 import { POSES } from "../art/owl-sprite.js";
 import { FONT } from "../ui.js";
 
@@ -7,7 +7,8 @@ export class Boot extends Phaser.Scene {
   constructor() { super("Boot"); }
   preload() {
     // one Flow drawing per owl and pose; owls without a shouting trick have no "shout" drawing
-    for (const o of OWLS) for (const p of POSES) if (p !== "shout" || !["hoot", "plume", "twitchy"].includes(o.id)) this.load.image(`owl-${o.id}-${p}`, `assets/owls/${o.id}-${p}.webp`);
+    for (const o of OWLS) for (const p of POSES) if (p !== "talk" && (p !== "shout" || !["hoot", "plume", "twitchy"].includes(o.id))) this.load.image(`owl-${o.id}-${p}`, `assets/owls/${o.id}-${p}.webp`);
+    for (const p of ["rest", "blink", "laugh", "shock", "talk"]) this.load.image(`owl-${GUIDE.id}-${p}`, `assets/owls/${GUIDE.id}-${p}.webp`);
     this.load.svg("feather", dataURL(featherSVG()), { width: 90, height: 225 });
     this.load.svg("clock", dataURL(clockSVG()), { width: 120, height: 126 });
     this.load.svg("zap", dataURL(zapSVG()), { width: 180, height: 165 });

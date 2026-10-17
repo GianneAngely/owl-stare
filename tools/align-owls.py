@@ -15,7 +15,9 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW, OUT = ROOT / "concept/flow-owls/raw", ROOT / "concept/flow-owls/aligned"
 # face ellipse in the rest drawing (1024 px raw): centre x, centre y, radius x, radius y (Angel 17 Oct: "rapiin")
 FACE = {"hoot": (500, 410, 230, 170), "plume": (500, 410, 230, 120), "twitchy": (480, 360, 220, 150), "boomer": (432, 390, 185, 138),
-        "grandma": (440, 400, 150, 105), "dj": (520, 380, 170, 120), "twins": (500, 345, 170, 120), "boss": (480, 350, 180, 120)}
+        "grandma": (440, 400, 150, 105), "dj": (520, 380, 170, 120), "twins": (500, 345, 170, 120), "boss": (480, 350, 180, 120),
+        "guide": (496, 400, 165, 105)}
+WHOLE = {"guide-talk"}   # poses that change more than the face (the guide raises a wing): taken as drawn
 
 
 def load(p):
@@ -59,6 +61,8 @@ def align(owl):
         if pose_name == "rest":
             continue
         pose = load(p)
+        if p.stem in WHOLE:
+            Image.open(p).convert("RGB").save(OUT / p.name); print(f"{p.stem}: whole"); continue
         s, (dy, dx) = register(rest, pose, face)
         # output pixel x (rest frame) reads pose at (x - shift) / s
         tf = SimilarityTransform(scale=1 / s, translation=(-dx / s, -dy / s))

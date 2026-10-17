@@ -15,7 +15,7 @@ export class Calibrate extends Phaser.Scene {
     enter(this);
     paper(this);
     this.tries = 0;
-    this.owl = new OwlSprite(this, "guide", "idle");
+    this.owl = new OwlSprite(this, "guide", "talk");
     this.head = text(this, 0, 0, "Let's learn your face", 46);
     this.say = text(this, 0, 0, "", 34);
     this.dots = this.add.graphics();
@@ -38,7 +38,7 @@ export class Calibrate extends Phaser.Scene {
     const r = calibrate(got);
     note(`calibrated ok=${r.ok} problem=${r.problem} tries=${this.tries}`);
     hook.calibration = r;
-    this.owl.setFace("idle");
+    this.owl.setFace("talk");
     // a missed blink or smile gets one retry, then the safe defaults; no face always needs a retry
     if (r.problem === "noface" || (!r.ok && this.tries < 2)) {
       this.say.setText(RETRY[r.problem]);
@@ -65,7 +65,7 @@ export class Calibrate extends Phaser.Scene {
   layout(w, h) {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1, oh = portrait ? h * 0.32 : h * 0.42;
     this.head.setFontSize(Math.round(Math.max(28 * D, u * 6))).setWordWrapWidth(w * 0.85).setPosition(w / 2, h * 0.1);
-    this.owl.setDisplaySize(oh * 400 / 440, oh).setPosition(w / 2, h * (portrait ? 0.38 : 0.42));
+    this.owl.place(w / 2, h * (portrait ? 0.38 : 0.42), oh, w * 0.9);
     this.say.setFontSize(Math.round(Math.max(24 * D, u * 5))).setWordWrapWidth(Math.min(w * 0.85, 760 * D)).setPosition(w / 2, h * (portrait ? 0.66 : 0.73));
     this.go.setScale(Math.max(0.9 * D, u / 7)).setPosition(w / 2, h * 0.84);
     this.lost.setFontSize(this.say.style.fontSize).setWordWrapWidth(this.say.style.wordWrapWidth).setPosition(this.say.x, this.say.y);

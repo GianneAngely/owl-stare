@@ -2,8 +2,8 @@
 // gap = ms between one owl's tricks, overlap = next trick starts on time even if the last one is still going,
 // short = name on the "Next" button, size = how big it stands, twins = two owls on screen.
 // art: assets/owls/<id>-<pose>.webp, drawn in Google Flow from concept/lineup.jpg (see report/owls/compare.jpg)
-// the owl on the title, camera and calibration screens: the cream twin, the closest to the key art owl
-export const GUIDE = { id: "guide", name: "Owl", art: "twins" };
+// the owl on the title, camera and calibration screens: the round owl from concept/keyart.jpg (Angel, 18 Oct)
+export const GUIDE = { id: "guide", name: "Owl" };
 
 export const OWLS = [
   { id: "hoot", name: "Hoot", who: "The beginner", line: "I never blink. Ever. Probably.", seconds: 10,

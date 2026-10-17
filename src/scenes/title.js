@@ -26,7 +26,7 @@ export class Title extends Phaser.Scene {
     const u = Math.min(w / 100, h / 100);
     const portrait = h > w * 1.1;
     const oh = portrait ? Math.min(h * 0.4, w * 0.8) : h * 0.5;
-    this.owl.setDisplaySize(oh * 400 / 440, oh).setPosition(w / 2, h * (portrait ? 0.4 : 0.42));
+    this.owl.place(w / 2, h * (portrait ? 0.4 : 0.42), oh, w * 0.9);
     this.title.setFontSize(Math.round(Math.max(44 * D, u * 11))).setPosition(w / 2, h * (portrait ? 0.12 : 0.1));
     this.sub.setFontSize(Math.round(Math.max(22 * D, u * 4.4))).setWordWrapWidth(w * 0.85).setPosition(w / 2, h * (portrait ? 0.68 : 0.74));
     this.play.setScale(Math.max(0.9 * D, u / 7)).setPosition(w / 2, h * (portrait ? 0.8 : 0.87));

@@ -20,7 +20,7 @@ export class CameraAsk extends Phaser.Scene {
   create() {
     enter(this);
     paper(this);
-    this.owl = new OwlSprite(this, "guide", "idle");
+    this.owl = new OwlSprite(this, "guide", "talk");   // explaining the camera
     this.head = text(this, 0, 0, "The owl needs to see you", 50);
     this.body = text(this, 0, 0, WHY, 28, { bold: false });
     this.status = text(this, 0, 0, "", 28);
@@ -47,7 +47,7 @@ export class CameraAsk extends Phaser.Scene {
   }
   layout(w, h) {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1, oh = portrait ? h * 0.22 : h * 0.3;
-    this.owl.setDisplaySize(oh * 400 / 440, oh).setPosition(w / 2, h * (portrait ? 0.17 : 0.2));
+    this.owl.place(w / 2, h * (portrait ? 0.17 : 0.2), oh, w * 0.9);
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 6.5))).setWordWrapWidth(w * 0.85).setPosition(w / 2, h * (portrait ? 0.35 : 0.43));
     this.body.setFontSize(Math.round(Math.max(19 * D, u * 4.2))).setWordWrapWidth(Math.min(w * 0.82, 760 * D)).setPosition(w / 2, h * (portrait ? 0.53 : 0.6));
     this.status.setFontSize(Math.round(Math.max(20 * D, u * 3.6))).setPosition(w / 2, h * 0.84);
@@ -71,7 +71,7 @@ export class Denied extends Phaser.Scene {
   }
   layout(w, h) {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1, oh = portrait ? h * 0.24 : h * 0.32;
-    this.owl.setDisplaySize(oh * 400 / 440, oh).setPosition(w / 2, h * (portrait ? 0.2 : 0.22));
+    this.owl.place(w / 2, h * (portrait ? 0.2 : 0.22), oh, w * 0.9);
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 6.5))).setWordWrapWidth(w * 0.85).setPosition(w / 2, h * (portrait ? 0.42 : 0.47));
     this.body.setFontSize(Math.round(Math.max(19 * D, u * 4.2))).setWordWrapWidth(Math.min(w * 0.82, 760 * D)).setPosition(w / 2, h * (portrait ? 0.58 : 0.63));
     this.retry.setScale(Math.max(0.9 * D, u / 7)).setPosition(w / 2, h * 0.84);

@@ -26,7 +26,7 @@ export class Match extends Phaser.Scene {
     this.name = text(this, 0, 0, this.owlData.name, 30);
     this.bar = this.add.graphics();
     this.clock = this.add.image(0, 0, "clock");
-    this.big = text(this, 0, 0, "", 120).setDepth(10);
+    this.big = text(this, 0, 0, "", 120).setDepth(10).setResolution(3);   // the countdown pops up to 2.8x
     this.hint = text(this, 0, 0, "don't blink · don't smile · don't look away", 22, { bold: false });
     this.layout(this.scale.width, this.scale.height);
     note(`match ${this.owlData.id}`);
