@@ -1,6 +1,6 @@
 // Camera explainer -> browser prompt -> model load. Denied / missing camera lands on a friendly retry screen.
 import { OwlSprite } from "../art/owl-sprite.js";
-import { D, paper, text, button, enter, note } from "../ui.js";
+import { D, paper, text, button, enter, note, below } from "../ui.js";
 import { face, startCamera, startTracking } from "../face/source.js";
 import { load } from "../store.js";
 import { showPreview } from "../preview.js";
@@ -49,9 +49,12 @@ export class CameraAsk extends Phaser.Scene {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1, oh = portrait ? h * 0.22 : h * 0.3;
     this.owl.place(w / 2, h * (portrait ? 0.17 : 0.2), oh, w * 0.9);
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 6.5))).setWordWrapWidth(w * 0.85).setPosition(w / 2, h * (portrait ? 0.35 : 0.43));
-    this.body.setFontSize(Math.round(Math.max(19 * D, u * 4.2))).setWordWrapWidth(Math.min(w * 0.82, 760 * D)).setPosition(w / 2, h * (portrait ? 0.53 : 0.6));
-    this.status.setFontSize(Math.round(Math.max(20 * D, u * 3.6))).setPosition(w / 2, h * 0.84);
-    this.go.setScale(Math.max(0.9 * D, u / 7)).setPosition(w / 2, h * 0.84);
+    this.body.setFontSize(Math.round(Math.max(19 * D, u * 4.2))).setWordWrapWidth(Math.min(w * 0.82, Math.max(760 * D, w * 0.5))).setPosition(w / 2, h * (portrait ? 0.53 : 0.6));
+    if (this.body.y - this.body.height / 2 < this.head.y + this.head.height / 2 + u * 2) below(this.head, this.body, u * 2);
+    this.go.setScale(Math.max(0.9 * D, u / 7));
+    const by = Math.min(h - this.go.height * this.go.scaleY / 2 - u * 2, Math.max(h * 0.84, this.body.y + this.body.height / 2 + u * 3 + this.go.height * this.go.scaleY / 2));
+    this.status.setFontSize(Math.round(Math.max(20 * D, u * 3.6))).setPosition(w / 2, by);
+    this.go.setPosition(w / 2, by);
   }
 }
 
@@ -73,7 +76,10 @@ export class Denied extends Phaser.Scene {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1, oh = portrait ? h * 0.24 : h * 0.32;
     this.owl.place(w / 2, h * (portrait ? 0.2 : 0.22), oh, w * 0.9);
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 6.5))).setWordWrapWidth(w * 0.85).setPosition(w / 2, h * (portrait ? 0.42 : 0.47));
-    this.body.setFontSize(Math.round(Math.max(19 * D, u * 4.2))).setWordWrapWidth(Math.min(w * 0.82, 760 * D)).setPosition(w / 2, h * (portrait ? 0.58 : 0.63));
-    this.retry.setScale(Math.max(0.9 * D, u / 7)).setPosition(w / 2, h * 0.84);
+    this.body.setFontSize(Math.round(Math.max(19 * D, u * 4.2))).setWordWrapWidth(Math.min(w * 0.82, Math.max(760 * D, w * 0.5))).setPosition(w / 2, h * (portrait ? 0.58 : 0.63));
+    if (this.body.y - this.body.height / 2 < this.head.y + this.head.height / 2 + u * 2) below(this.head, this.body, u * 2);
+    this.retry.setScale(Math.max(0.9 * D, u / 7));
+    const half = this.retry.height * this.retry.scaleY / 2;
+    this.retry.setPosition(w / 2, Math.min(h - half - u * 2, Math.max(h * 0.84, this.body.y + this.body.height / 2 + u * 3 + half)));
   }
 }

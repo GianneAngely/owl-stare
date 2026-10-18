@@ -16,3 +16,6 @@ dist/
 concept/flow-owls/raw/
 concept/flow-owls/aligned/
 concept/covers/
+test/fixtures/near/
+test/fixtures/far/
+test/fixtures/mid/

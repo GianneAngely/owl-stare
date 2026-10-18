@@ -41,9 +41,14 @@ export function paper(scene) {
   return g;
 }
 
-export const text = (scene, x, y, str, size, opts = {}) =>
-  scene.add.text(x, y, str, { fontFamily: FONT, fontSize: `${Math.round(size)}px`, fontStyle: opts.bold === false ? "normal" : "bold", color: INK,
-    align: "center", wordWrap: opts.wrap ? { width: opts.wrap, useAdvancedWrap: true } : undefined, lineSpacing: size * -0.05 }).setOrigin(0.5);
+export function text(scene, x, y, str, size, opts = {}) {
+  const t = scene.add.text(x, y, str, { fontFamily: FONT, fontSize: `${Math.round(size)}px`, fontStyle: opts.bold === false ? "normal" : "bold", color: INK,
+    align: "center", wordWrap: opts.wrap ? { width: opts.wrap, useAdvancedWrap: true } : undefined, lineSpacing: size * 0.12 }).setOrigin(0.5);
+  // line gap follows the font size, also when layout resizes the text later (lines were touching on big screens)
+  const setSize = t.setFontSize.bind(t);
+  t.setFontSize = (v) => setSize(v).setLineSpacing(Math.round(parseFloat(v) * 0.12));
+  return t;
+}
 
 // doodle button: yellow pill with an ink outline; id is what window.owl.press() calls
 export function button(scene, id, label, size, onPress, { color = YELLOW } = {}) {
@@ -63,3 +68,6 @@ export function button(scene, id, label, size, onPress, { color = YELLOW } = {})
 }
 
 export const BELLY_HEX = hex(BELLY);
+
+// put text b right under text a (both centre-origin), gap px apart: layouts stack by real heights, never overlap
+export const below = (a, b, gap) => b.setY(a.y + a.height / 2 + gap + b.height / 2);

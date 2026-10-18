@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>probe video</title>
+<script type="module">
+// Runs the game's tracker (src/face/tracker.js analyze: ROI zoom) over a folder of frames in VIDEO mode and returns the
+// signals per frame, like test/probe.html does for stills. ?old = the old pipeline: whole frame scaled to 640 px, no zoom.
+import { FaceLandmarker, FilesetResolver } from "../lib/mediapipe/vision_bundle.mjs";
+import { analyze } from "../src/face/tracker.js";
+import { toSignals } from "../src/face/signals.js";
+window.probeVideo = async (dir, n, mode) => {
+  const files = await FilesetResolver.forVisionTasks("../lib/mediapipe/wasm");
+  if (mode === "old720") mode = "oldbig";
+  const conf = mode === "old" ? {} : { minFaceDetectionConfidence: 0.3, minFacePresenceConfidence: 0.3 };
+  const lm = await FaceLandmarker.createFromOptions(files, { baseOptions: { modelAssetPath: "../models/face_landmarker.task", delegate: "CPU" },
+    runningMode: "VIDEO", numFaces: 1, outputFaceBlendshapes: true, outputFacialTransformationMatrixes: true, ...conf });
+  const small = Object.assign(document.createElement("canvas"), { width: 640, height: 360 });
+  const state = {}, out = [];
+  for (let i = 1; i <= n; i++) {
+    const img = new Image(); img.src = `fixtures/${dir}/f_${String(i).padStart(3, "0")}.jpg`; await img.decode();
+    const t = i * 33.37;
+    let s;
+    if (mode === "old") { small.getContext("2d").drawImage(img, 0, 0, 640, 360); s = toSignals(lm.detectForVideo(small, t), t); }
+    else s = analyze(lm, img, t, state);
+    out.push(s.face ? [s.blinkL, s.blinkR, s.smile, s.jaw, s.yaw, s.pitch].map((x) => +x.toFixed(3)) : null);
+  }
+  return out;
+};
+</script>

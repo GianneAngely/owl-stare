@@ -50,10 +50,12 @@ export class Ladder extends Phaser.Scene {
     note(`pick ${o.id}`);
     this.drawMarks();
   }
+  stackInfo() { this.info.setPosition(this.scale.width / 2, this.name.y + this.name.height + this.u * 1.6); }
   // the button sits under the info text, whose height changes with the owl's line
   placeGo() {
     const { height: h } = this.scale, u = this.u, half = (this.go.height * this.go.scaleY) / 2;
-    this.go.setPosition(this.scale.width / 2, Math.min(h - u * 3 - half, this.info.y + this.info.height / 2 + u * 3 + half));
+    this.stackInfo();
+    this.go.setPosition(this.scale.width / 2, Math.min(h - u * 3 - half, this.info.y + this.info.height + u * 3 + half));
   }
   drawMarks() {
     const u = this.u;
@@ -82,8 +84,10 @@ export class Ladder extends Phaser.Scene {
         .lineBetween(w * 0.2, y + u * 0.3, w * 0.24, y + u * 3).lineBetween(w * 0.7, y + u * 0.4, w * 0.75, y + u * 2.6).lineStyle(Math.max(3 * D, u * 0.7), hex(INK));
     }
     const infoTop = top + rowH * rows + u * 2;
-    this.name.setFontSize(Math.round(Math.max(26 * D, u * 5.6))).setWordWrapWidth(w * 0.9).setPosition(w / 2, infoTop + u * 4);
-    this.info.setFontSize(Math.round(Math.max(19 * D, u * 4))).setWordWrapWidth(Math.min(w * 0.85, 700 * D)).setPosition(w / 2, infoTop + u * (portrait ? 14 : 11.5));
+    // name, then the info block stacked under it by their real heights (fixed offsets overlapped on wide screens)
+    this.name.setFontSize(Math.round(Math.max(26 * D, u * 5.6))).setWordWrapWidth(w * 0.9).setOrigin(0.5, 0).setPosition(w / 2, infoTop + u);
+    this.info.setFontSize(Math.round(Math.max(19 * D, u * 4))).setWordWrapWidth(Math.min(w * 0.85, 700 * D)).setOrigin(0.5, 0);
+    this.stackInfo();
     this.go.setScale(Math.max(0.9 * D, u / 7));
     // test hook: where each owl is, in CSS pixels, for real mouse clicks
     window.owl.spots = Object.fromEntries(OWLS.map((o, i) => [o.id, [this.owls[i].home.x / D, this.owls[i].home.y / D]]));

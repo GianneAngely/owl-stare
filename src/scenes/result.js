@@ -1,6 +1,6 @@
 // Result card: what happened, how long you lasted, then rematch or climb. No photo of the player, ever.
 import { OwlSprite } from "../art/owl-sprite.js";
-import { D, paper, text, button, enter, hex } from "../ui.js";
+import { D, paper, text, button, enter, hex, below } from "../ui.js";
 import { INK, BELLY } from "../art/owl.js";
 import { save, load } from "../store.js";
 import { byId, nextOwl } from "../owls/index.js";
@@ -42,7 +42,7 @@ export class Result extends Phaser.Scene {
     const u = Math.min(w / 100, h / 100), portrait = h > w * 1.1;
     // portrait: start below the sound toggle (top right, ~62 css px); landscape: leave room under the card for buttons and links
     const s = Math.max(0.9 * D, u / 7.5), fs = Math.round(Math.max(18 * D, u * 3.2)), ly = h - Math.max(30 * D, u * 6);
-    const cw = Math.min(w * 0.88, 680 * D), cx = (w - cw) / 2, cy = portrait ? Math.max(h * 0.06, 66 * D) : h * 0.06;
+    const cw = Math.min(w * 0.88, Math.max(680 * D, w * 0.42)), cx = (w - cw) / 2, cy = portrait ? Math.max(h * 0.06, 66 * D) : h * 0.06;
     const buttons = portrait ? 34 * 1.7 * s * 1.8 + u * 7.5 : 34 * 1.7 * s + u * 4;   // stacked pair or one row, plus gaps
     const ch = Math.min(h * (portrait ? 0.66 : 0.7), cw * 1.1, ly - fs - buttons - cy);
     this.card.clear().fillStyle(hex(BELLY)).fillRoundedRect(cx, cy, cw, ch, 28).lineStyle(Math.max(3 * D, u * 0.7), hex(INK)).strokeRoundedRect(cx, cy, cw, ch, 28);
@@ -50,6 +50,7 @@ export class Result extends Phaser.Scene {
     this.owls.forEach((o, i) => o.place(w / 2 + (i - (this.owls.length - 1) / 2) * oh * 0.9, cy + ch * 0.32, oh));
     this.head.setFontSize(Math.round(Math.max(30 * D, u * 7))).setWordWrapWidth(cw * 0.9).setPosition(w / 2, cy + ch * 0.68);
     this.line.setFontSize(Math.round(Math.max(20 * D, u * 4.2))).setWordWrapWidth(cw * 0.85).setPosition(w / 2, cy + ch * 0.85);
+    if (this.line.y - this.line.height / 2 < this.head.y + this.head.height / 2 + u * 1.5) below(this.head, this.line, u * 1.5);
     const by = (cy + ch + ly - fs) / 2;
     if (portrait) {   // stacked right under the card, spaced by their real heights
       this.again.setScale(s); this.next.setScale(s * 0.8);
