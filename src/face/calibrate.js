@@ -31,6 +31,10 @@ export function calibrate({ relax, blink, smile }) {
     blinkR: one("blinkR"),
     smile: m.value,
     jaw: clamp(pct(relax.map((s) => s.jaw), 0.9) + 0.25, 0.25, 0.6),
+    // resting eye opening (mesh lid gap / eye width) per eye: an eye under half of it is shut (winks)
+    earL: relax[0].earL == null ? null : pct(relax.map((s) => s.earL), 0.5),
+    earR: relax[0].earR == null ? null : pct(relax.map((s) => s.earR), 0.5),
+    v: 2,
     yaw0: avg(relax.map((s) => s.yaw)),
     pitch0: avg(relax.map((s) => s.pitch)),
   };

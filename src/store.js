@@ -1,10 +1,10 @@
 // localStorage that never throws (private windows, blocked storage).
 const KEY = "owlstare.v1";
-// Calibrations saved before 18 Oct 2026 have no per-eye lines (winks, far faces): drop them so the game calibrates again.
+// Calibrations from before 19 Oct 2026 (v 2) have no resting eye opening (winks): drop them so the game calibrates again.
 export function load() {
   try {
     const data = JSON.parse(localStorage.getItem(KEY)) ?? {};
-    if (data.th && data.th.blinkL == null) delete data.th;
+    if (data.th && data.th.v !== 2) delete data.th;
     return data;
   } catch { return {}; }
 }

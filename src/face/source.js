@@ -3,7 +3,8 @@ import { openCamera, loadLandmarker, track, simdSupported } from "./tracker.js";
 
 const listeners = new Set();
 export const face = { latest: null, ready: false, fake: new URLSearchParams(location.search).has("fake"), video: null };
-const emit = (s) => { face.latest = s; listeners.forEach((f) => f(s)); };
+const debug = new URLSearchParams(location.search).has("debug") ? (await import("./debug.js")).showDebug : null;
+const emit = (s) => { face.latest = s; listeners.forEach((f) => f(s)); debug?.(s); };
 export const onFace = (f) => (listeners.add(f), () => listeners.delete(f));
 
 // step 1: the browser permission prompt. Throws with e.kind = nosimd | denied | nocamera | busy | unsupported | error

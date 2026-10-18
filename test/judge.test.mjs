@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { createJudge } from "../src/face/judge.js";
 import { calibrate, DEFAULTS } from "../src/face/calibrate.js";
 
@@ -129,4 +130,62 @@ test("real video: catches most real blinks and nothing else", async () => {
   assert.deepEqual(wrong, [], "false alarms");
   assert.ok(caught.length >= 11, `caught ${caught.length}/${BLINKS.length}: ${caught}`);
   assert.ok(hits.some(([, v]) => v === "smile"), "missed the smile");
+});
+
+// Face mesh eye opening on real footage through the game's tracker (fixtures/eye-signals.json, sources inside).
+// The blink blendshapes move both eyes together, so a wink reads about the same on both; the mesh lids don't.
+const eyes = JSON.parse(readFileSync(new URL("fixtures/eye-signals.json", import.meta.url))).clips;
+const pctl = (a, p) => [...a].sort((x, y) => x - y)[Math.floor(a.length * p)];
+// eyes are open most of the time, so the 80th percentile is about the resting opening calibration measures
+function replay(name, th = {}, keep = (sig) => sig) {
+  const rows = eyes[name].frames, open = rows.filter(Boolean);
+  const judge = createJudge({ ...DEFAULTS, blink: 0.45, earL: pctl(open.map((r) => r[6]), 0.8), earR: pctl(open.map((r) => r[7]), 0.8), ...th });
+  const hits = [];
+  rows.forEach((r, i) => {
+    const t = (i * 1001) / 30;
+    const sig = keep(r ? { t, face: true, blinkL: r[0], blinkR: r[1], smile: r[2], jaw: r[3], yaw: r[4], pitch: r[5], earL: r[6], earR: r[7], size: r[8] } : { t, face: false });
+    const v = judge.update(sig);
+    if (v) { hits.push([i + 1, v]); judge.reset(); }
+  });
+  return hits;
+}
+const caughtIn = (hits, marks) => marks.filter((m) => hits.some(([f, v]) => v === "blink" && Math.abs(m - f) <= 4));
+const noMesh = (sig) => ({ ...sig, earL: null, earR: null });
+
+test("real winks, either eye: caught from the face mesh, near and far (Angel, 19 Oct)", () => {
+  // 18 winks, left and right in turn, checked by eye from the frames
+  const WINKS = [2, 12, 21, 35, 45, 58, 69, 82, 93, 106, 117, 130, 143, 156, 168, 181, 191, 213];
+  const hits = replay("wink-near");
+  assert.ok(caughtIn(hits, WINKS).length >= 16, `caught ${caughtIn(hits, WINKS).length}/18`);
+  assert.ok(caughtIn(replay("wink-near", {}, noMesh), WINKS).length <= 8, "blendshapes alone should miss most winks");
+  // one long wink at frames 268-302 while smiling, near and with the face 4% of the picture wide
+  for (const clip of ["wink-glasses", "wink-glasses-far"]) {
+    const h = replay(clip);
+    assert.ok(h.some(([f, v]) => v === "blink" && f >= 266 && f <= 304), `${clip}: ${JSON.stringify(h.filter(([, v]) => v === "blink"))}`);
+  }
+});
+
+test("eye opening never false-alarms on a talking face, near or far", () => {
+  const BLINKS = [19, 51, 98, 163, 221, 259, 302, 402, 438, 524, 551, 574, 645, 677, 801];
+  for (const clip of ["address-near", "address-far"]) {
+    const hits = replay(clip, { smile: 2 });   // only blinks here
+    assert.deepEqual(hits.filter(([f]) => !BLINKS.some((b) => Math.abs(b - f) <= 4)), [], `${clip} false alarms`);
+    assert.ok(caughtIn(hits, BLINKS).length >= 12, `${clip} caught ${caughtIn(hits, BLINKS).length}/15`);
+  }
+});
+
+test("far away: stepping back, small head-angle drift and short dropouts are not looking away", () => {
+  // the far talking face, played as a player who calibrated close then stepped back: the head now meets the camera
+  // 12 degrees lower and the face drops out for 0.8 s twice while the tracker finds it again
+  const drop = (i) => (i >= 300 && i < 324) || (i >= 600 && i < 624);
+  const hits = replay("address-far", { smile: 2 }, (sig) => {
+    const i = Math.round((sig.t * 30) / 1001);
+    if (drop(i)) return { t: sig.t, face: false };
+    return sig.face ? { ...sig, pitch: sig.pitch + Math.min(12, i / 10) } : sig;
+  });
+  assert.deepEqual(hits.filter(([, v]) => v === "away"), []);
+  // a near face that disappears is still away after half a second, and a real head turn far away still counts
+  assert.equal(run(createJudge(DEFAULTS), frames(0, 2000, { face: false }))?.[1], "away");
+  const turn = run(createJudge(DEFAULTS), [...frames(0, 1000, { size: 0.05 }), ...frames(1000, 3000, { size: 0.05, yaw: 50 })]);
+  assert.equal(turn?.[1], "away");
 });

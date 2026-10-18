@@ -7,7 +7,7 @@
   const said = (msg) => owl.log.filter((l) => l[1].startsWith(msg)).length;
   const face = (window.fakeFace = {});
   // every owl open, thresholds known: no calibration in the video
-  localStorage.setItem("owlstare.v1", JSON.stringify({ th: { blink: 0.5, smile: 0.5, jaw: 0.35, yaw: 25, pitch: 20, yaw0: 0, pitch0: 0, blinkL: 0.5, blinkR: 0.5 },
+  localStorage.setItem("owlstare.v1", JSON.stringify({ th: { blink: 0.5, smile: 0.5, jaw: 0.35, yaw: 25, pitch: 20, yaw0: 0, pitch0: 0, blinkL: 0.5, blinkR: 0.5, v: 2 },
     beaten: ["hoot", "plume", "twitchy", "boomer", "grandma", "dj", "twins"], muted: true }));
   document.getElementById("mute").style.display = "none";   // no UI chrome in the video
   owl.quiet = true;   // tricks only when forced, so every shot is planned

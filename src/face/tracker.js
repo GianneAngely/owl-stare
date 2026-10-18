@@ -57,8 +57,8 @@ export function analyze(landmarker, source, t, state) {
     const stale = !crop || crop.full || want / crop.side < 0.3 || want / crop.side > 1.1 ||
       fx < crop.x + crop.side * 0.3 || fx > crop.x + crop.side * 0.7 || fy < crop.y + crop.side * 0.3 || fy > crop.y + crop.side * 0.7;
     if (stale) crop = { x: Math.max(0, Math.min(sw - want, fx - want / 2)), y: Math.max(0, Math.min(sh - want, fy - want / 2)), side: want };
-  } else if (!b && crop && !crop.full && (state.miss ?? 0) < 8) {
-    // just lost a zoomed face: keep looking in the same window for a few frames before scanning again
+  } else if (!b && crop && !crop.full && (state.miss ?? 0) < 20) {
+    // just lost a zoomed face: keep looking in the same window for ~0.7 s before scanning again (far faces drop out for a few frames)
   } else if (b) {                                // a big face: the whole picture, letterboxed into the square
     const side = Math.max(sw, sh); crop = { x: (sw - side) / 2, y: (sh - side) / 2, side, full: true };
   } else {                                       // no face yet: the whole picture, then overlapping zoomed tiles in turn
@@ -80,7 +80,7 @@ export function analyze(landmarker, source, t, state) {
     state.box = { cx: (crop.x + (x0 + x1) / 2 * k) / sw, cy: (crop.y + (y0 + y1) / 2 * k) / sh, w: (x1 - x0) * k / sw, h: (y1 - y0) * k / sh };
     state.miss = 0;
   } else { state.box = null; state.miss = (state.miss ?? 0) + 1; }   // lost it: retry the window, then scan again
-  return toSignals(result, t);
+  return { ...toSignals(result, t), size: state.box?.w ?? 0 };   // size: face width as a share of the camera picture
 }
 
 // Calls onSignal(sig) for every new camera frame (at most ~30 per second).

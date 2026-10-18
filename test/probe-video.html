@@ -19,7 +19,7 @@ window.probeVideo = async (dir, n, mode) => {
     let s;
     if (mode === "old") { small.getContext("2d").drawImage(img, 0, 0, 640, 360); s = toSignals(lm.detectForVideo(small, t), t); }
     else s = analyze(lm, img, t, state);
-    out.push(s.face ? [s.blinkL, s.blinkR, s.smile, s.jaw, s.yaw, s.pitch].map((x) => +x.toFixed(3)) : null);
+    out.push(s.face ? [s.blinkL, s.blinkR, s.smile, s.jaw, s.yaw, s.pitch, ...(mode === "ear" ? [s.earL, s.earR, state.box?.w ?? 0] : [])].map((x) => +x.toFixed(3)) : null);
   }
   return out;
 };

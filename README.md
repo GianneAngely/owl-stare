@@ -68,9 +68,9 @@ flowchart LR
 
 - **Signals** come from the Face Landmarker's blendshapes (`eyeBlinkLeft/Right`, `mouthSmileLeft/Right`, `jawOpen`) and its face transform matrix (head yaw and pitch).
 - **Calibration** finds where each player's eyes rest and close, separately for each eye, so the blink line suits every face and every distance from the camera.
-- **Rules** (`src/face/judge.js`, pure and unit-tested): a blink must hold for two frames, so one noisy frame never ends a match; a wink counts when one eye passes its own line while the other stays open; a smile pushes the blink line up so a grin is judged as a smile; looking away must last half a second.
-- **Far away** players: once a face is found, the tracker looks at a steady zoomed window around it, so a face 1–2 m from the camera is still big enough for the model.
-- **Tests** replay real footage through the rules: 30 s of a public-domain talking-head video, near and shrunk far away, checked against hand-labelled blinks.
+- **Rules** (`src/face/judge.js`, pure and unit-tested): a blink must hold for two frames, so one noisy frame never ends a match; either eye shut loses, judged from the face mesh (each lid gap against its calibrated resting gap), because the blink blendshapes move both eyes together during a wink; a smile pushes the blink line up so a grin is judged as a smile; looking away must last half a second.
+- **Far away** players: once a face is found, the tracker looks at a steady zoomed window around it, so a face 1–2 m from the camera is still big enough for the model. Small faces get more room for head angle, a resting pose that follows a player who steps back, and longer to come back after a dropout before it counts as looking away.
+- **Tests** replay real footage through the rules: 30 s of a public-domain talking-head video and two winking clips, near and shrunk far away, checked against hand-labelled blinks and winks.
 
 ## Run locally
 
@@ -87,6 +87,7 @@ Handy pages and switches:
 
 - `index.html?fake` — play without a camera: a scripted fake face (also silences the sound)
 - `index.html?mute` — no sound
+- `index.html?debug` — live face numbers in the corner (each eye, smile, head angle), handy for a screenshot when a blink is missed
 - `spike.html` — live detection meters and calibration
 - `tools/build-zip.sh` — the itch.io web build (`itch/owl-stare-web.zip`, under 10 MB)
 - `tools/check.mjs` — headless Chrome screenshots and scripted runs, with Chrome's fake camera
