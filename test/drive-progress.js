@@ -7,7 +7,7 @@
   let taken = 0;
   const shot = async (name) => { q.push(name); taken++; await until(() => window.shotsTaken === taken); };
   const face = (window.fakeFace = {});
-  localStorage.setItem("owlstare.v1", JSON.stringify({ th: { blink: 0.5, smile: 0.5, jaw: 0.35, yaw: 25, pitch: 20, yaw0: 0, pitch0: 0 } }));
+  localStorage.setItem("owlstare.v1", JSON.stringify({ th: { blink: 0.5, smile: 0.5, jaw: 0.35, yaw: 25, pitch: 20, yaw0: 0, pitch0: 0, blinkL: 0.5, blinkR: 0.5 } }));
   await until(() => window.owl?.scene === "Title"); owl.press("play");
   await until(() => owl.scene === "CameraAsk"); owl.press("camera");
   await until(() => owl.scene === "Ladder"); await sleep(500); await shot("p1-ladder-fresh");
