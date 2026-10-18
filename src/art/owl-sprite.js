@@ -2,6 +2,7 @@
 // so scenes and tricks can treat it like a sprite (setDisplaySize, scale and angle tweens, setFace).
 // The faces the code asks for map to poses; anything else (idle, stare, sweet, ...) is the owl's lineup pose, "rest".
 import { byId } from "../owls/index.js";
+import { BODY_X } from "./owl-centers.js";
 
 export const POSES = ["rest", "blink", "laugh", "shock", "tongue", "cross", "shout", "talk"];   // talk: the guide only
 const pose = (face) => (POSES.includes(face) ? face : "rest");
@@ -15,9 +16,10 @@ export class OwlSprite extends Phaser.GameObjects.Container {
     this.rest = "rest";   // the face tricks return to during a match
     // drawn from the feet, so the breathing below stretches upwards and the owl stays on the ground
     this.img = scene.add.image(0, 0, poseKey(this.art, face)).setOrigin(0.5, 1);
-    this.img.setY(this.img.height / 2);
+    // centre the owl's body, not the image box: wings, tails and props stick out to one side
+    this.img.setPosition(-(BODY_X[this.art] ?? 0) * this.img.width, this.img.height / 2);
     this.add(this.img);
-    this.setSize(this.img.width, this.img.height);
+    this.setSize(this.img.width + 2 * Math.abs(this.img.x), this.img.height);   // wide enough for the shifted image, so place() still fits it
     scene.add.existing(this);
     scene.tweens.add({ targets: this.img, scaleY: 1.025, scaleX: 0.99, duration: 1300 + Math.random() * 400, yoyo: true, repeat: -1, ease: "Sine.inOut" });
   }

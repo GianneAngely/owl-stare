@@ -2,6 +2,7 @@
 // never from the camera, so no face can end up in it.
 import { INK, PAPER, BELLY, YELLOW } from "./art/owl.js";
 import { FONT } from "./ui.js";
+import { BODY_X } from "./art/owl-centers.js";
 
 // the itch page the share text and card point to
 export const PLAY_URL = "https://gianneangely.itch.io/owl-stare";
@@ -32,7 +33,8 @@ export async function cardBlob(o, r, champion) {
   g.fillStyle = BELLY; g.beginPath(); g.roundRect(60, 60, W - 120, H - 120, 48); g.fill(); g.stroke();
   const owl = await image(`assets/owls/${o.id}-${r.won ? "shock" : "laugh"}.webp`);
   const n = o.twins ? 2 : 1, k = Math.min((n > 1 ? 470 : 560) / owl.height, (W - 220) / n / owl.width), ow = owl.width * k, oh = owl.height * k;
-  for (let i = 0; i < n; i++) g.drawImage(owl, W / 2 - ow / 2 + (i - (n - 1) / 2) * ow * 0.95, 670 - oh, ow, oh);
+  const dx = -(BODY_X[o.id] ?? 0) * ow;   // centre the body, not the image box
+  for (let i = 0; i < n; i++) g.drawImage(owl, W / 2 - ow / 2 + dx + (i - (n - 1) / 2) * ow * 0.95, 670 - oh, ow, oh);
   g.fillStyle = INK; g.textAlign = "center"; g.textBaseline = "middle";
   fitText(g, head, W / 2, 750, 84, W - 200);
   fitText(g, line, W / 2, 840, 46, W - 220, 400);

@@ -2,7 +2,7 @@
 
 Upload: `owl-stare-web.zip` (9.52 MB, index.html at the root; rebuild with `tools/build-zip.sh`). Kind: HTML, "This file will be played in the browser".
 Embed: 960 × 600, Mobile friendly ✓, Fullscreen button ✓. The iframe must allow the camera (itch's default embed does).
-Cover: `cover.png` (1260 × 1000) or `cover-630x500.png`. Screenshots: `screenshots/1-title.png` … `6-result.png` (1280 × 720, no real faces).
+Cover: `cover.png` (1260 × 1000) or `cover-630x500.png`. Screenshots: `screenshots/1-title.png` … `6-result.png` (1280 × 720, no real faces); `screenshots/0-title-1280x800.png` is the title at 1280 × 800.
 Link the result card points to: https://gianneangely.itch.io/owl-stare
 
 ## Title
