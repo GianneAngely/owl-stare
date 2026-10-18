@@ -76,7 +76,7 @@ export class Ladder extends Phaser.Scene {
     OWLS.forEach((o, i) => {
       const r = Math.floor(i / cols), c = i % cols, oh = Math.min(rowH * 0.78, cw * 1.05) * (0.8 + o.size * 0.2);
       const foot = top + rowH * (r + 0.92);
-      this.owls[i].place(w * 0.05 + cw * (c + 0.5), foot - oh / 2, oh);
+      this.owls[i].place(w * 0.05 + cw * (c + 0.5), foot - oh / 2, oh, portrait ? cw * 1.1 : Infinity);   // on a phone wide Boomer stays inside the screen
     });
     for (let r = 0; r < rows; r++) {
       const y = top + rowH * (r + 0.92);
