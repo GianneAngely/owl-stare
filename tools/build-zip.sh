@@ -4,7 +4,7 @@
 set -e
 cd "$(dirname "$0")/.."
 rm -rf dist && mkdir -p dist itch
-cp -R index.html src lib models dist/
+cp -R index.html src lib models dist/ && rm -f dist/lib/README.md
 mkdir -p dist/assets && cp -R assets/fonts assets/owls dist/assets/
 find dist -name .DS_Store -delete
 # SIMD wasm only: keeps the zip under itch's 10 MB browser upload limit (browsers without SIMD get a friendly screen)

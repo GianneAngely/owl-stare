@@ -1,7 +1,7 @@
 # Owl sprites from Google Flow: pose list and prompts
 
-Angel (via the manager, 16 Oct): the owls may be made in Google Flow so they match the GDD art exactly.
-Flow: Google account /u/2, project "Oct 13 - 02:21", model Nano Banana. Raw downloads go in `raw/` here,
+Angel (16 Oct): the owls may be made in Google Flow so they match the GDD art exactly.
+Made in Google Flow with the Nano Banana Pro model. Raw downloads go in `raw/` here,
 finished sprites in `assets/owls/` (transparent WebP, about 640 px tall, budget about 2.2 MB in total so the itch zip stays under 10 MB).
 
 ## Poses the game needs

@@ -1,7 +1,7 @@
 # Owl Stare — Checklist tes HP (untuk Angel)
 
-Sekitar 10 menit per HP. Buka link itch draft (dari manager) di **iPhone Safari** dan/atau **Android Chrome**.
-Isi kolom hasil dengan ✓, ✗ atau catatan singkat, lalu kirim ke manager. Screenshot kalau ada yang aneh.
+Sekitar 10 menit per HP. Buka halaman itch Owl Stare di **iPhone Safari** dan/atau **Android Chrome**.
+Isi kolom hasil dengan ✓, ✗ atau catatan singkat, lalu kirim balik. Screenshot kalau ada yang aneh.
 
 HP: ______  Browser: ______  Pakai kacamata? ya / tidak  Cahaya: terang / redup
 

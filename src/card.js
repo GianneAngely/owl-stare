@@ -4,7 +4,7 @@ import { INK, PAPER, BELLY, YELLOW } from "./art/owl.js";
 import { FONT } from "./ui.js";
 
 // the itch page the share text and card point to
-export const PLAY_URL = "https://gianneangely.itch.io/owl-stare";   // from the manager, 16 Oct; Angel still to confirm
+export const PLAY_URL = "https://gianneangely.itch.io/owl-stare";
 const WHY = { blink: "I blinked", smile: "I smiled", away: "I looked away" };
 
 export function cardText(o, r, champion) {

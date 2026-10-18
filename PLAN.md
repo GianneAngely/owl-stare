@@ -102,19 +102,19 @@ test/                  node --test (judge, calibrate) + fixtures wajah
 - Ladder: owl terkunci = siluet tinta; terbuka bila owl sebelumnya dikalahkan (`localStorage owlstare.v1.beaten`).
 
 ## 9. Sisa milestone (update 16 Okt 2026)
-Keputusan Angel 16 Okt: art tetap doodle SVG; Hoot 2 trik; itch hanya draft/restricted (upload oleh sesi itch staff, saya siapkan build); playtest laptop: semua kedipan tertangkap.
+Keputusan Angel 16 Okt: art tetap doodle SVG; Hoot 2 trik; itch hanya draft/restricted (build disiapkan di repo ini); playtest laptop: semua kedipan tertangkap.
 
 | # | Isi | Verifikasi |
 |---|---|---|
 | **M4 Result card** | Save (PNG digambar ulang dari owl + teks, **tanpa wajah/kamera**) dan Share (Web Share API dengan file bila didukung, kalau tidak: salin teks + link) | PNG tersimpan headless, dicek isinya bukan frame kamera; tombol tidak menimpa di 6 ukuran layar; `npm test` |
 | **M5 Polish** | tombol mute (diingat), tick tegang makin cepat di 3 dtk terakhir, titik-titik + catatan "first time takes a while" saat model dimuat (progress asli tidak bisa: wasm dimuat MediaPipe sendiri), peringatan "can't see you" di kalibrasi bila wajah hilang/gelap | `?fake` loop penuh, screenshot tiap layar desktop + HP, nol error console |
 | **M6 Mobile** | `MOBILE-TEST.md`: checklist untuk Angel (iPhone Safari + Android Chrome: izin kamera, fps, kedip, rotasi, suara setelah tap, layar terkunci/kembali); cek headless ukuran HP; kamera dilanjutkan saat tab kembali. Memori tekstur owl tidak dikurangi: di HP 2x owl memang tampil ±800 px tinggi, jadi tekstur 800x880 dibutuhkan; tunggu hasil HP asli | checklist dikirim ke Angel; screenshot HP kecil/besar/landscape |
-| **M7 itch build** | `tools/build-zip.sh` ulang, teks halaman itch (deskripsi, privasi kamera, kontrol), cover 630x500 + 3 screenshot | zip diuji di iframe lintas-origin dengan kamera palsu; lapor ke manager "siap upload" (draft/restricted saja) |
+| **M7 itch build** | `tools/build-zip.sh` ulang, teks halaman itch (deskripsi, privasi kamera, kontrol), cover 630x500 + 3 screenshot | zip diuji di iframe lintas-origin dengan kamera palsu; siap upload (draft/restricted dulu) |
 | M8 Promo video | rekam frame (record-steady) owl + trik, tanpa wajah pemain | menunggu approval Angel |
 
 ## 10. Art ulang mengikuti lineup (17 Okt 2026)
-Permintaan Angel lewat manager (16 Okt): owl harus sama dengan `concept/lineup.jpg`. Semua owl digambar ulang sebagai SVG di `src/art/owl.js`: garis brush tebal-tipis dengan sedikit putus (filter displacement), isi flat, piringan wajah pucat, tanda dada V, kaki gelap, sayap di dalam badan. Hoot = bayi fluffy. Wajah istirahat per owl (`rest`): dots, specs, wide, stare, sweet, idle, idle, sleepy. Layar title / kamera / kalibrasi pakai owl cream dari keyart (`GUIDE`). Pembanding: `test/compare.html`.
+Permintaan Angel (16 Okt): owl harus sama dengan `concept/lineup.jpg`. Semua owl digambar ulang sebagai SVG di `src/art/owl.js`: garis brush tebal-tipis dengan sedikit putus (filter displacement), isi flat, piringan wajah pucat, tanda dada V, kaki gelap, sayap di dalam badan. Hoot = bayi fluffy. Wajah istirahat per owl (`rest`): dots, specs, wide, stare, sweet, idle, idle, sleepy. Layar title / kamera / kalibrasi pakai owl cream dari keyart (`GUIDE`). Pembanding: `test/compare.html`.
 Build itch: hanya wasm SIMD (zip ±7 MB, batas 10 MB). Browser tanpa SIMD dapat layar "This browser can't run the owl".
 
 ## 11. Owl dari Google Flow (17 Okt 2026)
-Angel (lewat manager): "generate pakai google flow aja biar persis". Owl sekarang sprite per pose dari Flow (Nano Banana Pro, akun /u/2, project "Oct 13 - 02:21"): pose rest dibuat dari lineup.jpg, pose lain dari gambar rest owl yang sama. `tools/cut-owls.py` memotong background (barrier garis tinta + aturan warna kertas; Hoot diisi dari dalam bulu) dan menyamakan kotak semua pose satu owl, keluar WebP 640 px di `assets/owls/` (2.1 MB). File mentah di `concept/flow-owls/raw/` (45 MB, tidak masuk git). SVG kode tetap di branch `owls-svg`. Semua tes otomatis wajib tanpa suara (`--mute-audio`, game diam di `?fake`/`?mute`).
+Angel: "generate pakai google flow aja biar persis". Owl sekarang sprite per pose dari Google Flow (Nano Banana Pro): pose rest dibuat dari lineup.jpg, pose lain dari gambar rest owl yang sama. `tools/cut-owls.py` memotong background (barrier garis tinta + aturan warna kertas; Hoot diisi dari dalam bulu) dan menyamakan kotak semua pose satu owl, keluar WebP 640 px di `assets/owls/` (2.1 MB). File mentah di `concept/flow-owls/raw/` (45 MB, tidak masuk git). SVG kode tetap di branch `owls-svg`. Semua tes otomatis wajib tanpa suara (`--mute-audio`, game diam di `?fake`/`?mute`).
