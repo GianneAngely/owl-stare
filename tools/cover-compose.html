@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- itch cover: a full-bleed Flow illustration + the hand-lettered "Owl Stare" title, drawn crisp at any size.
+     node tools/check.mjs "tools/cover-compose.html?bg=concept/covers/a.png&pos=top" 630x500 2500 itch/cover-a.png --dpr=2
+     pos: top | bottom | left | right (where the title goes); size: font px; y: exact top px; tag: optional short line under the title. -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../assets/fonts/gaegu.css">
+<style>
+  html, body { margin: 0; width: 630px; height: 500px; overflow: hidden; background: #1d2a44; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* soft vignette for depth and to keep the title readable */
+  #vig { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, transparent 45%, rgba(10, 16, 32, 0.55) 100%); }
+  #title { position: absolute; left: 0; right: 0; text-align: center; font-family: "Gaegu", sans-serif; font-weight: 700;
+    font-size: 104px; line-height: 0.9; color: #f6cf5a; letter-spacing: 1px; transform: rotate(-3deg);
+    -webkit-text-stroke: 9px #1f1b18; paint-order: stroke fill; text-shadow: 0 6px 0 #1f1b18, 0 10px 18px rgba(0, 0, 0, 0.45); }
+  #tag { position: absolute; left: 50%; transform: translateX(-50%); padding: 4px 18px 8px; border-radius: 999px;
+    background: #fbf8ee; border: 4px solid #1f1b18; font: 700 26px "Gaegu", sans-serif; color: #1f1b18; white-space: nowrap; }
+</style>
+<img id="bg">
+<div id="vig"></div>
+<div id="title">Owl Stare</div>
+<div id="tag" hidden></div>
+<script>
+  const q = new URLSearchParams(location.search), t = document.getElementById("title"), tag = document.getElementById("tag");
+  document.getElementById("bg").src = "../" + q.get("bg");
+  const pos = q.get("pos") ?? "top";
+  if (pos === "top") t.style.top = "22px";
+  if (pos === "bottom") t.style.bottom = q.get("tag") ? "62px" : "26px";
+  if (pos === "left" || pos === "right") { t.style.top = "150px"; t.style.width = "330px"; t.style[pos] = "0"; t.style[pos === "left" ? "right" : "left"] = "auto"; t.style.fontSize = "112px"; }
+  if (q.get("size")) t.style.fontSize = q.get("size") + "px";
+  if (q.get("y")) t.style.top = q.get("y") + "px";
+  if (q.get("tag")) {
+    tag.hidden = false; tag.textContent = q.get("tag");
+    if (pos === "top") tag.style.top = "128px"; else if (pos === "bottom") tag.style.bottom = "18px"; else { tag.style.top = "380px"; tag.style.left = pos === "left" ? "165px" : "465px"; }
+  }
+  document.fonts.ready.then(() => (window.done = true));
+</script>
